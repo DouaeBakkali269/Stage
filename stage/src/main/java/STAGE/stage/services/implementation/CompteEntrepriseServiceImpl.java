@@ -1,6 +1,10 @@
 package STAGE.stage.services.implementation;
 
+import STAGE.stage.models.User;
+import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import STAGE.stage.dtos.CompteEntrepriseDTO;
 import STAGE.stage.mappers.EntityMapper;
@@ -20,17 +24,36 @@ public class CompteEntrepriseServiceImpl implements CompteEntrepriseService {
     private final EntrepriseRepository entrepriseRepository;
     private final EntityMapper mapper;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userrepository;
+
+
     @Override
     public CompteEntrepriseDTO createCompteEntreprise(CompteEntrepriseDTO dto) {
-        Entreprise entreprise = entrepriseRepository.findById(dto.getIdCompte())
-                .orElseThrow(() -> new RuntimeException("Entreprise introuvable"));
+        if (dto.getMotDePasse() == null || dto.getMotDePasse().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty.");
+        }
 
-        CompteEntreprise compte = mapper.toEntity(dto);
-        compte.setEntreprise(entreprise);
+        User user = new User();
+        user.setRole("ENTREPRISE");
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
+        userrepository.save(user);
 
-        return mapper.toDto(compteRepository.save(compte));
+        CompteEntreprise compteEntreprise = new CompteEntreprise();
+        compteEntreprise.setNom(dto.getNom());
+        compteEntreprise.setEmail(dto.getEmail());
+        compteEntreprise.setTelephone(dto.getTelephone());
+        compteEntreprise.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        compteEntreprise.setEntreprise(entrepriseRepository.findById(dto.getEntrepriseId())
+                .orElseThrow(() -> new RuntimeException("Entreprise introuvable"))); // Associate Entreprise
+        compteEntreprise.setUser(user); // Associate User
+
+        return mapper.toDto(compteRepository.save(compteEntreprise));
     }
-
     @Override
     public CompteEntrepriseDTO updateCompteEntreprise(Long id, CompteEntrepriseDTO dto) {
         CompteEntreprise compte = compteRepository.findById(id)
@@ -65,5 +88,13 @@ public class CompteEntrepriseServiceImpl implements CompteEntrepriseService {
     @Override
     public void deleteCompteEntreprise(Long id) {
         compteRepository.deleteById(id);
+    }
+
+    @Override
+    public CompteEntrepriseDTO getCompteEntrepriseByEntrepriseId(Long entrepriseId) {
+        CompteEntreprise compteEntreprise = compteRepository.findByEntreprise_IdEntreprise(entrepriseId)
+                .orElseThrow(() -> new RuntimeException("Compte lié à cette entreprise introuvable"));
+
+        return mapper.toDto(compteEntreprise);
     }
 }

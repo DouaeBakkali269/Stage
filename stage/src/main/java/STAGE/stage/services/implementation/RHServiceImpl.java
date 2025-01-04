@@ -1,6 +1,10 @@
 package STAGE.stage.services.implementation;
 
+import STAGE.stage.models.User;
+import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import STAGE.stage.dtos.RHDTO;
 import STAGE.stage.mappers.EntityMapper;
@@ -21,22 +25,34 @@ public class RHServiceImpl implements RHService {
     private final EntrepriseRepository entrepriseRepository;
     private final EntityMapper entityMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userrepository;
+
     @Override
-    public RHDTO createRH(RHDTO rhDTO) {
+    public RHDTO createRH(RHDTO dto) {
+        if (dto.getMotDePasse() == null || dto.getMotDePasse().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty.");
+        }
+
+        User user = new User();
+        user.setRole("RH");
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
+        userrepository.save(user);
+
         RH rh = new RH();
-        rh.setNom(rhDTO.getNom());
-        rh.setPrenom(rhDTO.getPrenom());
-        rh.setEmail(rhDTO.getEmail());
-        rh.setMotDePasse(rhDTO.getMotDePasse());
-        rh.setTelephone(rhDTO.getTelephone());
+        rh.setNom(dto.getNom());
+        rh.setPrenom(dto.getPrenom());
+        rh.setEmail(dto.getEmail());
+        rh.setTelephone(dto.getTelephone());
+        rh.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        rh.setEntreprise(entrepriseRepository.findById(dto.getEntrepriseId())
+                .orElseThrow(() -> new RuntimeException("Entreprise introuvable"))); // Associate Entreprise
+        rh.setUser(user); // Associate User
 
-        // Associer l'entreprise (si applicable)
-        Entreprise entreprise = entrepriseRepository.findById(rhDTO.getEntrepriseId())
-                .orElseThrow(() -> new RuntimeException("Entreprise introuvable"));
-        rh.setEntreprise(entreprise);
-
-        RH savedRH = rhRepository.save(rh);
-        return entityMapper.toDto(savedRH);
+        return entityMapper.toDto(rhRepository.save(rh));
     }
 
     @Override

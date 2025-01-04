@@ -30,4 +30,8 @@ public class RH {
 
     @OneToMany(mappedBy = "rh", cascade = CascadeType.ALL)
     private List<Offre> offres;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id") // Explicitly mapping foreign key
+    private User user;
 }

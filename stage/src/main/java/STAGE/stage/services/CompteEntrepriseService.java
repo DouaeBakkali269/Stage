@@ -10,4 +10,6 @@ public interface CompteEntrepriseService {
     CompteEntrepriseDTO getCompteEntrepriseById(Long id);
     List<CompteEntrepriseDTO> getAllComptesEntreprise();
     void deleteCompteEntreprise(Long id);
+
+    CompteEntrepriseDTO getCompteEntrepriseByEntrepriseId(Long entrepriseId);
 }

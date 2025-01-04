@@ -27,4 +27,8 @@ public class ChefDeFiliere {
 
     @ManyToOne
     private Ecole ecole;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id") // Explicitly mapping foreign key
+    private User user;
 }

@@ -10,4 +10,6 @@ public interface CompteEcoleService {
     CompteEcoleDTO getCompteEcoleById(Long id);
     List<CompteEcoleDTO> getAllComptesEcole();
     void deleteCompteEcole(Long id);
+
+    CompteEcoleDTO getCompteEcoleByEcoleId(Long ecoleId);
 }

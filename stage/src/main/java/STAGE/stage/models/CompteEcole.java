@@ -26,5 +26,8 @@ public class CompteEcole {
     @OneToOne
     @JoinColumn(name = "ecole_id")
     private Ecole ecole; // Relation avec l'entité Ecole
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id") // Explicitly mapping foreign key
+    private User user;
 }
 

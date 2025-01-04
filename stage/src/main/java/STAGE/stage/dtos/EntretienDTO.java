@@ -18,6 +18,7 @@ public class EntretienDTO {
     private String duree;
     private String etat;
     private String resultat;
+    private String lien;
     private Long offreId;
     private Long etudiantId;
 }

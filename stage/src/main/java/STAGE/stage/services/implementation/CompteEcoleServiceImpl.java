@@ -1,6 +1,10 @@
 package STAGE.stage.services.implementation;
 
+import STAGE.stage.models.User;
+import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import STAGE.stage.dtos.CompteEcoleDTO;
 import STAGE.stage.mappers.EntityMapper;
@@ -20,16 +24,36 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
     private final EcoleRepository ecoleRepository;
     private final EntityMapper mapper;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userrepository;
+
     @Override
     public CompteEcoleDTO createCompteEcole(CompteEcoleDTO dto) {
-        Ecole ecole = ecoleRepository.findById(dto.getEcoleId())
-                .orElseThrow(() -> new RuntimeException("École introuvable"));
+        if (dto.getMotDePasse() == null || dto.getMotDePasse().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty.");
+        }
 
-        CompteEcole compte = mapper.toEntity(dto);
-        compte.setEcole(ecole);
+        User user = new User();
+        user.setRole("ECOLE");
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
+        userrepository.save(user);
 
-        return mapper.toDto(compteRepository.save(compte));
+        CompteEcole compteEcole = new CompteEcole();
+        compteEcole.setNom(dto.getNom());
+        compteEcole.setEmail(dto.getEmail());
+        compteEcole.setTelephone(dto.getTelephone());
+        compteEcole.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        compteEcole.setEcole(ecoleRepository.findById(dto.getEcoleId())
+                .orElseThrow(() -> new RuntimeException("École introuvable"))); // Associate Ecole
+        compteEcole.setUser(user); // Associate User
+
+        return mapper.toDto(compteRepository.save(compteEcole));
     }
+
 
     @Override
     public CompteEcoleDTO updateCompteEcole(Long id, CompteEcoleDTO dto) {
@@ -65,6 +89,13 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
     @Override
     public void deleteCompteEcole(Long id) {
         compteRepository.deleteById(id);
+    }
+    @Override
+    public CompteEcoleDTO getCompteEcoleByEcoleId(Long ecoleId) {
+        CompteEcole compteEcole = compteRepository.findByEcole_IdEcole(ecoleId)
+                .orElseThrow(() -> new RuntimeException("CompteEcole introuvable pour cet ID d'École."));
+
+        return mapper.toDto(compteEcole);
     }
 }
 
