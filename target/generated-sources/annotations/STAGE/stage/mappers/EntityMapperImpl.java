@@ -10,6 +10,7 @@ import STAGE.stage.dtos.EncadrantDTO;
 import STAGE.stage.dtos.EntrepriseDTO;
 import STAGE.stage.dtos.EntretienDTO;
 import STAGE.stage.dtos.EtudiantDTO;
+import STAGE.stage.dtos.EvaluationDTO;
 import STAGE.stage.dtos.FiliereDTO;
 import STAGE.stage.dtos.OffreDTO;
 import STAGE.stage.dtos.PostulationDTO;
@@ -25,6 +26,7 @@ import STAGE.stage.models.Encadrant;
 import STAGE.stage.models.Entreprise;
 import STAGE.stage.models.Entretien;
 import STAGE.stage.models.Etudiant;
+import STAGE.stage.models.Evaluation;
 import STAGE.stage.models.Filiere;
 import STAGE.stage.models.Offre;
 import STAGE.stage.models.Postulation;
@@ -37,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-04T19:01:11+0100",
+    date = "2025-01-05T14:19:04+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -51,6 +53,7 @@ public class EntityMapperImpl implements EntityMapper {
 
         AdminDTO adminDTO = new AdminDTO();
 
+        adminDTO.setUserId( adminUserId( admin ) );
         adminDTO.setId( admin.getId() );
         adminDTO.setNomAd( admin.getNomAd() );
         adminDTO.setPrenomAd( admin.getPrenomAd() );
@@ -69,6 +72,7 @@ public class EntityMapperImpl implements EntityMapper {
 
         Admin admin = new Admin();
 
+        admin.setUser( adminDTOToUser( adminDTO ) );
         admin.setId( adminDTO.getId() );
         admin.setNomAd( adminDTO.getNomAd() );
         admin.setPrenomAd( adminDTO.getPrenomAd() );
@@ -159,6 +163,7 @@ public class EntityMapperImpl implements EntityMapper {
 
         chefDeFiliereDTO.setEcoleId( chefDeFiliereEcoleIdEcole( chefDeFiliere ) );
         chefDeFiliereDTO.setFiliereId( chefDeFiliereFiliereIdFiliere( chefDeFiliere ) );
+        chefDeFiliereDTO.setUserId( chefDeFiliereUserId( chefDeFiliere ) );
         chefDeFiliereDTO.setIdCf( chefDeFiliere.getIdCf() );
         chefDeFiliereDTO.setNom( chefDeFiliere.getNom() );
         chefDeFiliereDTO.setPrenom( chefDeFiliere.getPrenom() );
@@ -179,6 +184,7 @@ public class EntityMapperImpl implements EntityMapper {
 
         chefDeFiliere.setEcole( chefDeFiliereDTOToEcole( chefDeFiliereDTO ) );
         chefDeFiliere.setFiliere( chefDeFiliereDTOToFiliere( chefDeFiliereDTO ) );
+        chefDeFiliere.setUser( chefDeFiliereDTOToUser( chefDeFiliereDTO ) );
         chefDeFiliere.setIdCf( chefDeFiliereDTO.getIdCf() );
         chefDeFiliere.setNom( chefDeFiliereDTO.getNom() );
         chefDeFiliere.setPrenom( chefDeFiliereDTO.getPrenom() );
@@ -408,6 +414,7 @@ public class EntityMapperImpl implements EntityMapper {
         RHDTO rHDTO = new RHDTO();
 
         rHDTO.setEntrepriseId( rhEntrepriseIdEntreprise( rh ) );
+        rHDTO.setUserId( rhUserId( rh ) );
         rHDTO.setIdRh( rh.getIdRh() );
         rHDTO.setNom( rh.getNom() );
         rHDTO.setPrenom( rh.getPrenom() );
@@ -427,6 +434,7 @@ public class EntityMapperImpl implements EntityMapper {
         RH rH = new RH();
 
         rH.setEntreprise( rHDTOToEntreprise( rhDTO ) );
+        rH.setUser( rHDTOToUser( rhDTO ) );
         rH.setIdRh( rhDTO.getIdRh() );
         rH.setNom( rhDTO.getNom() );
         rH.setPrenom( rhDTO.getPrenom() );
@@ -445,6 +453,7 @@ public class EntityMapperImpl implements EntityMapper {
 
         CoordinateurDeStageDTO coordinateurDeStageDTO = new CoordinateurDeStageDTO();
 
+        coordinateurDeStageDTO.setUserId( coordinateurDeStageUserId( coordinateurDeStage ) );
         coordinateurDeStageDTO.setEcoleId( coordinateurDeStageEcoleIdEcole( coordinateurDeStage ) );
         coordinateurDeStageDTO.setIdCs( coordinateurDeStage.getIdCs() );
         coordinateurDeStageDTO.setNom( coordinateurDeStage.getNom() );
@@ -466,6 +475,7 @@ public class EntityMapperImpl implements EntityMapper {
         CoordinateurDeStage coordinateurDeStage = new CoordinateurDeStage();
 
         coordinateurDeStage.setEcole( coordinateurDeStageDTOToEcole( coordinateurDeStageDTO ) );
+        coordinateurDeStage.setUser( coordinateurDeStageDTOToUser( coordinateurDeStageDTO ) );
         coordinateurDeStage.setIdCs( coordinateurDeStageDTO.getIdCs() );
         coordinateurDeStage.setNom( coordinateurDeStageDTO.getNom() );
         coordinateurDeStage.setPrenom( coordinateurDeStageDTO.getPrenom() );
@@ -486,6 +496,7 @@ public class EntityMapperImpl implements EntityMapper {
         EncadrantDTO encadrantDTO = new EncadrantDTO();
 
         encadrantDTO.setEntrepriseId( encadrantEntrepriseIdEntreprise( encadrant ) );
+        encadrantDTO.setUserId( encadrantUserId( encadrant ) );
         encadrantDTO.setIdEncadrant( encadrant.getIdEncadrant() );
         encadrantDTO.setNom( encadrant.getNom() );
         encadrantDTO.setPrenom( encadrant.getPrenom() );
@@ -505,6 +516,7 @@ public class EntityMapperImpl implements EntityMapper {
         Encadrant encadrant = new Encadrant();
 
         encadrant.setEntreprise( encadrantDTOToEntreprise( encadrantDTO ) );
+        encadrant.setUser( encadrantDTOToUser( encadrantDTO ) );
         encadrant.setIdEncadrant( encadrantDTO.getIdEncadrant() );
         encadrant.setNom( encadrantDTO.getNom() );
         encadrant.setPrenom( encadrantDTO.getPrenom() );
@@ -562,10 +574,12 @@ public class EntityMapperImpl implements EntityMapper {
         CompteEcoleDTO compteEcoleDTO = new CompteEcoleDTO();
 
         compteEcoleDTO.setEcoleId( compteEcoleEcoleIdEcole( compteEcole ) );
+        compteEcoleDTO.setUserId( compteEcoleUserId( compteEcole ) );
         compteEcoleDTO.setIdCompte( compteEcole.getIdCompte() );
         compteEcoleDTO.setNom( compteEcole.getNom() );
         compteEcoleDTO.setPrenom( compteEcole.getPrenom() );
         compteEcoleDTO.setEmail( compteEcole.getEmail() );
+        compteEcoleDTO.setMotDePasse( compteEcole.getMotDePasse() );
         compteEcoleDTO.setTelephone( compteEcole.getTelephone() );
 
         return compteEcoleDTO;
@@ -580,10 +594,12 @@ public class EntityMapperImpl implements EntityMapper {
         CompteEcole compteEcole = new CompteEcole();
 
         compteEcole.setEcole( compteEcoleDTOToEcole( compteEcoleDTO ) );
+        compteEcole.setUser( compteEcoleDTOToUser( compteEcoleDTO ) );
         compteEcole.setIdCompte( compteEcoleDTO.getIdCompte() );
         compteEcole.setNom( compteEcoleDTO.getNom() );
         compteEcole.setPrenom( compteEcoleDTO.getPrenom() );
         compteEcole.setEmail( compteEcoleDTO.getEmail() );
+        compteEcole.setMotDePasse( compteEcoleDTO.getMotDePasse() );
         compteEcole.setTelephone( compteEcoleDTO.getTelephone() );
 
         return compteEcole;
@@ -598,10 +614,12 @@ public class EntityMapperImpl implements EntityMapper {
         CompteEntrepriseDTO compteEntrepriseDTO = new CompteEntrepriseDTO();
 
         compteEntrepriseDTO.setEntrepriseId( compteEntrepriseEntrepriseIdEntreprise( compteEntreprise ) );
+        compteEntrepriseDTO.setUserId( compteEntrepriseUserId( compteEntreprise ) );
         compteEntrepriseDTO.setIdCompte( compteEntreprise.getIdCompte() );
         compteEntrepriseDTO.setNom( compteEntreprise.getNom() );
         compteEntrepriseDTO.setPrenom( compteEntreprise.getPrenom() );
         compteEntrepriseDTO.setEmail( compteEntreprise.getEmail() );
+        compteEntrepriseDTO.setMotDePasse( compteEntreprise.getMotDePasse() );
         compteEntrepriseDTO.setTelephone( compteEntreprise.getTelephone() );
 
         return compteEntrepriseDTO;
@@ -616,10 +634,12 @@ public class EntityMapperImpl implements EntityMapper {
         CompteEntreprise compteEntreprise = new CompteEntreprise();
 
         compteEntreprise.setEntreprise( compteEntrepriseDTOToEntreprise( compteEntrepriseDTO ) );
+        compteEntreprise.setUser( compteEntrepriseDTOToUser( compteEntrepriseDTO ) );
         compteEntreprise.setIdCompte( compteEntrepriseDTO.getIdCompte() );
         compteEntreprise.setNom( compteEntrepriseDTO.getNom() );
         compteEntreprise.setPrenom( compteEntrepriseDTO.getPrenom() );
         compteEntreprise.setEmail( compteEntrepriseDTO.getEmail() );
+        compteEntreprise.setMotDePasse( compteEntrepriseDTO.getMotDePasse() );
         compteEntreprise.setTelephone( compteEntrepriseDTO.getTelephone() );
 
         return compteEntreprise;
@@ -641,6 +661,7 @@ public class EntityMapperImpl implements EntityMapper {
         entretienDTO.setDuree( entretien.getDuree() );
         entretienDTO.setEtat( entretien.getEtat() );
         entretienDTO.setResultat( entretien.getResultat() );
+        entretienDTO.setLien( entretien.getLien() );
 
         return entretienDTO;
     }
@@ -661,8 +682,72 @@ public class EntityMapperImpl implements EntityMapper {
         entretien.setDuree( entretienDTO.getDuree() );
         entretien.setEtat( entretienDTO.getEtat() );
         entretien.setResultat( entretienDTO.getResultat() );
+        entretien.setLien( entretienDTO.getLien() );
 
         return entretien;
+    }
+
+    @Override
+    public EvaluationDTO toDto(Evaluation evaluation) {
+        if ( evaluation == null ) {
+            return null;
+        }
+
+        EvaluationDTO evaluationDTO = new EvaluationDTO();
+
+        evaluationDTO.setEncadrantId( evaluationEncadrantIdEncadrant( evaluation ) );
+        evaluationDTO.setStageId( evaluationStageIdStage( evaluation ) );
+        evaluationDTO.setIdEvaluation( evaluation.getIdEvaluation() );
+        evaluationDTO.setNote( evaluation.getNote() );
+        evaluationDTO.setCompetances( evaluation.getCompetances() );
+        evaluationDTO.setCommentaire( evaluation.getCommentaire() );
+
+        return evaluationDTO;
+    }
+
+    @Override
+    public Evaluation toEntity(EvaluationDTO evaluationDTO) {
+        if ( evaluationDTO == null ) {
+            return null;
+        }
+
+        Evaluation evaluation = new Evaluation();
+
+        evaluation.setEncadrant( evaluationDTOToEncadrant( evaluationDTO ) );
+        evaluation.setStage( evaluationDTOToStage( evaluationDTO ) );
+        evaluation.setIdEvaluation( evaluationDTO.getIdEvaluation() );
+        evaluation.setNote( evaluationDTO.getNote() );
+        evaluation.setCompetances( evaluationDTO.getCompetances() );
+        evaluation.setCommentaire( evaluationDTO.getCommentaire() );
+
+        return evaluation;
+    }
+
+    private Long adminUserId(Admin admin) {
+        if ( admin == null ) {
+            return null;
+        }
+        User user = admin.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
+    protected User adminDTOToUser(AdminDTO adminDTO) {
+        if ( adminDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( adminDTO.getUserId() );
+
+        return user;
     }
 
     private Long chefDeFiliereEcoleIdEcole(ChefDeFiliere chefDeFiliere) {
@@ -695,6 +780,21 @@ public class EntityMapperImpl implements EntityMapper {
         return idFiliere;
     }
 
+    private Long chefDeFiliereUserId(ChefDeFiliere chefDeFiliere) {
+        if ( chefDeFiliere == null ) {
+            return null;
+        }
+        User user = chefDeFiliere.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
     protected Ecole chefDeFiliereDTOToEcole(ChefDeFiliereDTO chefDeFiliereDTO) {
         if ( chefDeFiliereDTO == null ) {
             return null;
@@ -717,6 +817,18 @@ public class EntityMapperImpl implements EntityMapper {
         filiere.setIdFiliere( chefDeFiliereDTO.getFiliereId() );
 
         return filiere;
+    }
+
+    protected User chefDeFiliereDTOToUser(ChefDeFiliereDTO chefDeFiliereDTO) {
+        if ( chefDeFiliereDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( chefDeFiliereDTO.getUserId() );
+
+        return user;
     }
 
     private Long etudiantEcoleIdEcole(Etudiant etudiant) {
@@ -1004,6 +1116,21 @@ public class EntityMapperImpl implements EntityMapper {
         return idEntreprise;
     }
 
+    private Long rhUserId(RH rH) {
+        if ( rH == null ) {
+            return null;
+        }
+        User user = rH.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
     protected Entreprise rHDTOToEntreprise(RHDTO rHDTO) {
         if ( rHDTO == null ) {
             return null;
@@ -1014,6 +1141,33 @@ public class EntityMapperImpl implements EntityMapper {
         entreprise.setIdEntreprise( rHDTO.getEntrepriseId() );
 
         return entreprise;
+    }
+
+    protected User rHDTOToUser(RHDTO rHDTO) {
+        if ( rHDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( rHDTO.getUserId() );
+
+        return user;
+    }
+
+    private Long coordinateurDeStageUserId(CoordinateurDeStage coordinateurDeStage) {
+        if ( coordinateurDeStage == null ) {
+            return null;
+        }
+        User user = coordinateurDeStage.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
     }
 
     private Long coordinateurDeStageEcoleIdEcole(CoordinateurDeStage coordinateurDeStage) {
@@ -1043,6 +1197,18 @@ public class EntityMapperImpl implements EntityMapper {
         return ecole;
     }
 
+    protected User coordinateurDeStageDTOToUser(CoordinateurDeStageDTO coordinateurDeStageDTO) {
+        if ( coordinateurDeStageDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( coordinateurDeStageDTO.getUserId() );
+
+        return user;
+    }
+
     private Long encadrantEntrepriseIdEntreprise(Encadrant encadrant) {
         if ( encadrant == null ) {
             return null;
@@ -1058,6 +1224,21 @@ public class EntityMapperImpl implements EntityMapper {
         return idEntreprise;
     }
 
+    private Long encadrantUserId(Encadrant encadrant) {
+        if ( encadrant == null ) {
+            return null;
+        }
+        User user = encadrant.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
     protected Entreprise encadrantDTOToEntreprise(EncadrantDTO encadrantDTO) {
         if ( encadrantDTO == null ) {
             return null;
@@ -1068,6 +1249,18 @@ public class EntityMapperImpl implements EntityMapper {
         entreprise.setIdEntreprise( encadrantDTO.getEntrepriseId() );
 
         return entreprise;
+    }
+
+    protected User encadrantDTOToUser(EncadrantDTO encadrantDTO) {
+        if ( encadrantDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( encadrantDTO.getUserId() );
+
+        return user;
     }
 
     private Long compteEcoleEcoleIdEcole(CompteEcole compteEcole) {
@@ -1085,6 +1278,21 @@ public class EntityMapperImpl implements EntityMapper {
         return idEcole;
     }
 
+    private Long compteEcoleUserId(CompteEcole compteEcole) {
+        if ( compteEcole == null ) {
+            return null;
+        }
+        User user = compteEcole.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
     protected Ecole compteEcoleDTOToEcole(CompteEcoleDTO compteEcoleDTO) {
         if ( compteEcoleDTO == null ) {
             return null;
@@ -1095,6 +1303,18 @@ public class EntityMapperImpl implements EntityMapper {
         ecole.setIdEcole( compteEcoleDTO.getEcoleId() );
 
         return ecole;
+    }
+
+    protected User compteEcoleDTOToUser(CompteEcoleDTO compteEcoleDTO) {
+        if ( compteEcoleDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( compteEcoleDTO.getUserId() );
+
+        return user;
     }
 
     private Long compteEntrepriseEntrepriseIdEntreprise(CompteEntreprise compteEntreprise) {
@@ -1112,6 +1332,21 @@ public class EntityMapperImpl implements EntityMapper {
         return idEntreprise;
     }
 
+    private Long compteEntrepriseUserId(CompteEntreprise compteEntreprise) {
+        if ( compteEntreprise == null ) {
+            return null;
+        }
+        User user = compteEntreprise.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
     protected Entreprise compteEntrepriseDTOToEntreprise(CompteEntrepriseDTO compteEntrepriseDTO) {
         if ( compteEntrepriseDTO == null ) {
             return null;
@@ -1122,6 +1357,18 @@ public class EntityMapperImpl implements EntityMapper {
         entreprise.setIdEntreprise( compteEntrepriseDTO.getEntrepriseId() );
 
         return entreprise;
+    }
+
+    protected User compteEntrepriseDTOToUser(CompteEntrepriseDTO compteEntrepriseDTO) {
+        if ( compteEntrepriseDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( compteEntrepriseDTO.getUserId() );
+
+        return user;
     }
 
     private Long entretienOffreIdOffre(Entretien entretien) {
@@ -1176,5 +1423,59 @@ public class EntityMapperImpl implements EntityMapper {
         etudiant.setIdEtu( entretienDTO.getEtudiantId() );
 
         return etudiant;
+    }
+
+    private Long evaluationEncadrantIdEncadrant(Evaluation evaluation) {
+        if ( evaluation == null ) {
+            return null;
+        }
+        Encadrant encadrant = evaluation.getEncadrant();
+        if ( encadrant == null ) {
+            return null;
+        }
+        Long idEncadrant = encadrant.getIdEncadrant();
+        if ( idEncadrant == null ) {
+            return null;
+        }
+        return idEncadrant;
+    }
+
+    private Long evaluationStageIdStage(Evaluation evaluation) {
+        if ( evaluation == null ) {
+            return null;
+        }
+        Stage stage = evaluation.getStage();
+        if ( stage == null ) {
+            return null;
+        }
+        Long idStage = stage.getIdStage();
+        if ( idStage == null ) {
+            return null;
+        }
+        return idStage;
+    }
+
+    protected Encadrant evaluationDTOToEncadrant(EvaluationDTO evaluationDTO) {
+        if ( evaluationDTO == null ) {
+            return null;
+        }
+
+        Encadrant encadrant = new Encadrant();
+
+        encadrant.setIdEncadrant( evaluationDTO.getEncadrantId() );
+
+        return encadrant;
+    }
+
+    protected Stage evaluationDTOToStage(EvaluationDTO evaluationDTO) {
+        if ( evaluationDTO == null ) {
+            return null;
+        }
+
+        Stage stage = new Stage();
+
+        stage.setIdStage( evaluationDTO.getStageId() );
+
+        return stage;
     }
 }

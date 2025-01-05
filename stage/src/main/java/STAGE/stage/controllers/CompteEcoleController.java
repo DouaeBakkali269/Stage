@@ -2,17 +2,26 @@ package STAGE.stage.controllers;
 
 import STAGE.stage.dtos.CompteEcoleDTO;
 import STAGE.stage.services.CompteEcoleService;
+import STAGE.stage.services.StatisticsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/compte-ecoles")
+@RequiredArgsConstructor
 public class CompteEcoleController {
 
     @Autowired
     private CompteEcoleService compteEcoleService;
+
+    @Autowired
+    private final StatisticsService statisticsService;
+
 
     /**
      * Create a new CompteEcole
@@ -57,5 +66,56 @@ public class CompteEcoleController {
     @GetMapping("/by-ecole/{ecoleId}")
     public CompteEcoleDTO getCompteEcoleByEcoleId(@PathVariable Long ecoleId) {
         return compteEcoleService.getCompteEcoleByEcoleId(ecoleId);
+    }
+
+
+
+
+
+    // Ecole Statistics
+    @GetMapping("/{idEcole}/students")
+    public long countStudentsByEcole(@PathVariable Long idEcole) {
+        return statisticsService.countStudentsByEcole(idEcole);
+    }
+
+    @GetMapping("/{idEcole}/students-without-internship")
+    public long countStudentsWithoutInternship(@PathVariable Long idEcole) {
+        return statisticsService.countStudentsWithoutInternship(idEcole);
+    }
+
+    @GetMapping("/{idEcole}/students-with-internship/{filiereId}")
+    public long countStudentsWithInternshipByFiliere(@PathVariable Long filiereId, @PathVariable Long idEcole) {
+        return statisticsService.countStudentsWithInternshipByFiliere(filiereId, idEcole);
+    }
+
+    @GetMapping("/{filiereId}/total-students")
+    public long countTotalStudentsByFiliere(@PathVariable Long filiereId) {
+        return statisticsService.countTotalStudentsByFiliere(filiereId);
+    }
+
+    @GetMapping("/{filiereId}/visible-offers")
+    public long countVisibleOffersByFiliere(@PathVariable Long filiereId) {
+        return statisticsService.countVisibleOffersByFiliere(filiereId);
+    }
+    @PutMapping("/{id}/disable")
+    public ResponseEntity<String> disableCompteEcole(@PathVariable Long id, @RequestBody String newPassword) {
+        try {
+            compteEcoleService.disableCompteEcole(id, newPassword);
+            return ResponseEntity.ok("CompteEcole with ID " + id + " has been disabled and its password updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    // Get by Iser ID
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getCompteEcoleIdByUserId(@PathVariable Long userId) {
+        try {
+            Long compteEcoleId = compteEcoleService.getCompteEcoleyUserId(userId);
+            return ResponseEntity.ok(compteEcoleId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

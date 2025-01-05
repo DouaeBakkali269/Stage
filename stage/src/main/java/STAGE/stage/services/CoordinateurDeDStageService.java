@@ -10,4 +10,6 @@ public interface CoordinateurDeDStageService {
     CoordinateurDeStageDTO getCoordinateurDeStageById(Long id);
     List<CoordinateurDeStageDTO> getAllCoordinateursDeStage();
     void deleteCoordinateurDeStage(Long id);
+
+    Long getCoordinateurDeStageIdIdByUserId(Long userId);
 }

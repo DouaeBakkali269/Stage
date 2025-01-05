@@ -45,5 +45,21 @@ public class OffreController {
         return offreService.getOffresByEntreprise(entrepriseId);
     }
 
+    /**
+     * Delete an Offer by its ID.
+     *
+     * @param id the ID of the offer to delete
+     * @return ResponseEntity indicating the result
+     */
+    @DeleteMapping("/offers/{id}")
+    public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
+        try {
+            offreService.deleteOfferById(id);
+            return ResponseEntity.ok("Offer with ID " + id + " has been deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
 

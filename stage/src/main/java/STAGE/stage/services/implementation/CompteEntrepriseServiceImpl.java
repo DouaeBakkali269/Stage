@@ -15,6 +15,7 @@ import STAGE.stage.repositories.EntrepriseRepository;
 import STAGE.stage.services.CompteEntrepriseService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,5 +97,38 @@ public class CompteEntrepriseServiceImpl implements CompteEntrepriseService {
                 .orElseThrow(() -> new RuntimeException("Compte lié à cette entreprise introuvable"));
 
         return mapper.toDto(compteEntreprise);
+    }
+    @Override
+    public void disableCompteEntreprise(Long id, String newPassword) {
+        // Fetch the CompteEntreprise by ID
+        CompteEntreprise compte = compteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("CompteEntreprise with ID " + id + " does not exist."));
+
+        // Encode the new password
+        String hashedPassword = passwordEncoder.encode(newPassword);
+
+        // Update password in the CompteEntreprise table
+        compte.setMotDePasse(hashedPassword);
+
+        // Fetch and update the User table via userId
+        Long userId = compte.getUser().getId(); // Assuming CompteEntreprise has a field `userId`
+        User user = userrepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " does not exist."));
+
+        user.setPassword(hashedPassword); // Update user's password as well
+
+        // Save both entities
+        compteRepository.save(compte);
+        userrepository.save(user);
+    }
+
+    @Override
+    public Long getCompteEntrepriseIdByUserId(Long userId) {
+        Optional<CompteEntreprise> compteEntrepriseOptional = compteRepository.findByUserId(userId);
+        if (compteEntrepriseOptional.isPresent()) {
+            return compteEntrepriseOptional.get().getIdCompte();
+        } else {
+            throw new IllegalArgumentException("CompteEntreprise with userId " + userId + " does not exist.");
+        }
     }
 }

@@ -110,7 +110,17 @@ public class OffreServiceImpl implements OffreService {
     }
     @Override
     public List<Offre> getOffresByEntreprise(Long entrepriseId) {
-        return offreRepository.findByEntrepriseIdEntreprise(entrepriseId); // Assurez-vous que la méthode existe dans le repository
+        return offreRepository.findOffersByCompanyId(entrepriseId); // Assurez-vous que la méthode existe dans le repository
+    }
+
+    @Override
+    public void deleteOfferById(Long id) {
+        // Verifies if the offer exists, throwing an exception if needed for safety
+        if (!offreRepository.existsById(id)) {
+            throw new IllegalArgumentException("Offer with ID " + id + " does not exist.");
+        }
+        // Deletes the offer by ID
+        offreRepository.deleteById(id);
     }
 }
 

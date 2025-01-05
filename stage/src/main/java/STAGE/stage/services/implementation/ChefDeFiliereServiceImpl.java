@@ -1,6 +1,6 @@
 package STAGE.stage.services.implementation;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.*;
 import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import STAGE.stage.dtos.ChefDeFiliereDTO;
 import STAGE.stage.mappers.EntityMapper;
-import STAGE.stage.models.ChefDeFiliere;
-import STAGE.stage.models.Ecole;
-import STAGE.stage.models.Filiere;
 import STAGE.stage.repositories.ChefDeFiliereRepository;
 import STAGE.stage.repositories.EcoleRepository;
 import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.services.ChefDeFiliereService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,5 +108,14 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
         return chefRepository.findByFiliere_IdFiliere(filiereId).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public Long getChefDeFiliereIdIdByUserId(Long userId) {
+        Optional<ChefDeFiliere> compteEntrepriseOptional = chefRepository.findByUserId(userId);
+        if (compteEntrepriseOptional.isPresent()) {
+            return compteEntrepriseOptional.get().getIdCf();
+        } else {
+            throw new IllegalArgumentException("CompteEntreprise with userId " + userId + " does not exist.");
+        }
     }
 }

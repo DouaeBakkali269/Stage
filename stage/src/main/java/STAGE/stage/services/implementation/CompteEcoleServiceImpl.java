@@ -15,6 +15,7 @@ import STAGE.stage.repositories.EcoleRepository;
 import STAGE.stage.services.CompteEcoleService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,6 +91,7 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
     public void deleteCompteEcole(Long id) {
         compteRepository.deleteById(id);
     }
+
     @Override
     public CompteEcoleDTO getCompteEcoleByEcoleId(Long ecoleId) {
         CompteEcole compteEcole = compteRepository.findByEcole_IdEcole(ecoleId)
@@ -97,5 +99,41 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
 
         return mapper.toDto(compteEcole);
     }
+
+    @Override
+    public void disableCompteEcole(Long id, String newPassword) {
+        // Fetch the CompteEcole by ID
+        CompteEcole compte = compteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("CompteEcole with ID " + id + " does not exist."));
+
+        // Encode the new password
+        String hashedPassword = passwordEncoder.encode(newPassword);
+
+        // Update password in the CompteEcole table
+        compte.setMotDePasse(hashedPassword);
+
+        // Fetch and update the User table via userId
+        Long userId = compte.getUser().getId(); // Assuming CompteEcole has a field `userId`
+        User user = userrepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " does not exist."));
+
+        user.setPassword(hashedPassword); // Update user's password as well
+
+        // Save both entities
+        compteRepository.save(compte);
+        userrepository.save(user);
+    }
+
+
+    @Override
+    public Long getCompteEcoleyUserId(Long userId) {
+        Optional<CompteEcole> compteOptional = compteRepository.findByUserId(userId);
+        if (compteOptional.isPresent()) {
+            return compteOptional.get().getIdCompte();
+        } else {
+            throw new IllegalArgumentException("Admin with userId " + userId + " does not exist.");
+        }
+    }
+
 }
 

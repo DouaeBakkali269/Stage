@@ -15,6 +15,7 @@ import STAGE.stage.repositories.RHRepository;
 import STAGE.stage.services.RHService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -99,5 +100,15 @@ public class RHServiceImpl implements RHService {
     @Override
     public List<RH> getRHByEntreprise(Long entrepriseId) {
         return rhRepository.findByEntrepriseIdEntreprise(entrepriseId); // Assurez-vous que la méthode existe dans le repository
+    }
+
+    @Override
+    public Long getRHIdByUserId(Long userId) {
+        Optional<RH> rhOptional = rhRepository.findByUserId(userId);
+        if (rhOptional.isPresent()) {
+            return rhOptional.get().getIdRh();
+        } else {
+            throw new IllegalArgumentException("RH with userId " + userId + " does not exist.");
+        }
     }
 }

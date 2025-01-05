@@ -2,7 +2,9 @@ package STAGE.stage.controllers;
 
 import STAGE.stage.dtos.EncadrantDTO;
 import STAGE.stage.services.EncadrantService;
+import STAGE.stage.services.StatisticsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class EncadrantController {
 
     private final EncadrantService encadrantService;
+    private final StatisticsService statisticsService;
 
     // Create a new Encadrant
     @PostMapping
@@ -50,5 +53,25 @@ public class EncadrantController {
     public ResponseEntity<Void> deleteEncadrant(@PathVariable Long id) {
         encadrantService.deleteEncadrant(id);
         return ResponseEntity.noContent().build();
+    }
+    // Encadrant Statistics
+    @GetMapping("/{supervisorId}/ongoing-internships")
+    public long countOngoingInternshipsBySupervisor(@PathVariable Long supervisorId) {
+        return statisticsService.countOngoingInternshipsBySupervisor(supervisorId);
+    }
+
+    @GetMapping("/{supervisorId}/total-internships")
+    public long countTotalInternshipsBySupervisor(@PathVariable Long supervisorId) {
+        return statisticsService.countTotalInternshipsBySupervisor(supervisorId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getEncadrantIdByUserId(@PathVariable Long userId) {
+        try {
+            Long encadrantId = encadrantService.getEncadrantIdByUserId(userId);
+            return ResponseEntity.ok(encadrantId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

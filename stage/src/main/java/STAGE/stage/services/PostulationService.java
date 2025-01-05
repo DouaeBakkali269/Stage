@@ -15,4 +15,6 @@ public interface PostulationService {
     List<PostulationDTO> getPostulationsByEtudiantId(Long etudiantId);
 
     void updateEtatPostulation(Long postulationId, String etat);
+
+    void deletePostulationById(Long id);
 }

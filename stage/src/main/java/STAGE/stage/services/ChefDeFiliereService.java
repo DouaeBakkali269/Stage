@@ -14,5 +14,7 @@ public interface ChefDeFiliereService {
     List<ChefDeFiliereDTO> getChefsByEcoleId(Long ecoleId);
 
     List<ChefDeFiliereDTO> getChefsByFiliereId(Long filiereId);
+
+    Long getChefDeFiliereIdIdByUserId(Long userId);
 }
 

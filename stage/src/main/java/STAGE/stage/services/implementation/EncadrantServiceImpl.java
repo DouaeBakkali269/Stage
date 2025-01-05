@@ -13,6 +13,7 @@ import STAGE.stage.models.Encadrant;
 import STAGE.stage.models.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -87,5 +88,14 @@ public class EncadrantServiceImpl implements EncadrantService {
             throw new RuntimeException("Encadrant not found");
         }
         encadrantRepository.deleteById(id);
+    }
+    @Override
+    public Long getEncadrantIdByUserId(Long userId) {
+        Optional<Encadrant> encadrantOptional = encadrantRepository.findByUserId(userId);
+        if (encadrantOptional.isPresent()) {
+            return encadrantOptional.get().getIdEncadrant();
+        } else {
+            throw new IllegalArgumentException("Encadrant with userId " + userId + " does not exist.");
+        }
     }
 }

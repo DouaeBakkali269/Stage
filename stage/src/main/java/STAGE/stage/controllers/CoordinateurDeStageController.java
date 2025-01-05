@@ -3,6 +3,7 @@ package STAGE.stage.controllers;
 import STAGE.stage.dtos.CoordinateurDeStageDTO;
 import STAGE.stage.services.CoordinateurDeDStageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +51,16 @@ public class CoordinateurDeStageController {
     public ResponseEntity<Void> deleteCoordinateurDeStage(@PathVariable Long id) {
         coordinateurDeDStageService.deleteCoordinateurDeStage(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Get CoordinateurDeStage by User ID
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getCoordinateurDeStageIdByUserId(@PathVariable Long userId) {
+        try {
+            Long coordinateurDeStageId = coordinateurDeDStageService.getCoordinateurDeStageIdIdByUserId(userId);
+            return ResponseEntity.ok(coordinateurDeStageId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

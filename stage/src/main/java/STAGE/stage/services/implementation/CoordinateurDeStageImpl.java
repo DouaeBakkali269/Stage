@@ -2,6 +2,7 @@ package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.CoordinateurDeStageDTO;
 import STAGE.stage.mappers.EntityMapper;
+import STAGE.stage.models.CompteEntreprise;
 import STAGE.stage.models.CoordinateurDeStage;
 import STAGE.stage.models.User;
 import STAGE.stage.repositories.CoordinateurDeStageRepository;
@@ -11,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,5 +87,15 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
             throw new RuntimeException("Coordinateur de Stage not found");
         }
         coordinateurDeStageRepository.deleteById(id);
+    }
+
+    @Override
+    public Long getCoordinateurDeStageIdIdByUserId(Long userId) {
+        Optional<CoordinateurDeStage> coordinateurDeStageOptional = coordinateurDeStageRepository.findByUserId(userId);
+        if (coordinateurDeStageOptional.isPresent()) {
+            return coordinateurDeStageOptional.get().getIdCs();
+        } else {
+            throw new IllegalArgumentException("CompteEntreprise with userId " + userId + " does not exist.");
+        }
     }
 }

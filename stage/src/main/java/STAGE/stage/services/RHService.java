@@ -18,4 +18,6 @@ public interface RHService {
     void deleteRH(Long id);
 
     List<RH> getRHByEntreprise(Long entrepriseId);
+
+    Long getRHIdByUserId(Long userId);
 }

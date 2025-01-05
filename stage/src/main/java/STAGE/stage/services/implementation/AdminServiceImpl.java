@@ -70,6 +70,14 @@ public class AdminServiceImpl implements AdminService {
         adminRepository.deleteById(id);
     }
 
-
+    @Override
+    public Long getAdminIdByUserId(Long userId) {
+        Optional<Admin> adminOptional = adminRepository.findByUserId(userId);
+        if (adminOptional.isPresent()) {
+            return adminOptional.get().getId();
+        } else {
+            throw new IllegalArgumentException("Admin with userId " + userId + " does not exist.");
+        }
+    }
 
 }

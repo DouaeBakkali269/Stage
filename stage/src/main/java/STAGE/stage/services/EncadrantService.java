@@ -10,4 +10,6 @@ public interface EncadrantService {
     EncadrantDTO getEncadrantById(Long id);
     List<EncadrantDTO> getAllEncadrants();
     void deleteEncadrant(Long id);
+
+    Long getEncadrantIdByUserId(Long userId);
 }

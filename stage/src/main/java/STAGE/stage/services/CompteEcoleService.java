@@ -12,4 +12,7 @@ public interface CompteEcoleService {
     void deleteCompteEcole(Long id);
 
     CompteEcoleDTO getCompteEcoleByEcoleId(Long ecoleId);
+    void disableCompteEcole(Long id, String newPassword);
+
+    Long getCompteEcoleyUserId(Long userId);
 }

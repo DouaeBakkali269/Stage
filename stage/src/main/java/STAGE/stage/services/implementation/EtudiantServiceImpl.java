@@ -17,6 +17,7 @@ import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.services.EtudiantService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,6 +85,26 @@ public class EtudiantServiceImpl implements EtudiantService {
     public List<EtudiantDTO> getEtudiantsByFiliere(Long filiereId) {
         List<Etudiant> etudiants = etudiantRepository.findByFiliereIdFiliere(filiereId);
         return etudiants.stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteEtudiantById(Long id) {
+        // Verifies if the offer exists, throwing an exception if needed for safety
+        if (!etudiantRepository.existsById(id)) {
+            throw new IllegalArgumentException("Offer with ID " + id + " does not exist.");
+        }
+        // Deletes the offer by ID
+        etudiantRepository.deleteById(id);
+    }
+
+    @Override
+    public Long getEtudiantIdByUserId(Long userId) {
+        Optional<Etudiant> etudiantOptional = etudiantRepository.findByUserId(userId);
+        if (etudiantOptional.isPresent()) {
+            return etudiantOptional.get().getIdEtu();
+        } else {
+            throw new IllegalArgumentException("Etudiant with userId " + userId + " does not exist.");
+        }
     }
 }
 

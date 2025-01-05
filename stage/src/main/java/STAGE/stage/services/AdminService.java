@@ -10,6 +10,8 @@ public interface AdminService {
     Optional<AdminDTO> findById(Long id);
     List<AdminDTO> findAll();
     void deleteById(Long id);
+
+    Long getAdminIdByUserId(Long userId);
 }
 
 

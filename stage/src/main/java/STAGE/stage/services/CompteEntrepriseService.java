@@ -12,4 +12,7 @@ public interface CompteEntrepriseService {
     void deleteCompteEntreprise(Long id);
 
     CompteEntrepriseDTO getCompteEntrepriseByEntrepriseId(Long entrepriseId);
+    void disableCompteEntreprise(Long id, String newPassword);
+
+    Long getCompteEntrepriseIdByUserId(Long userId);
 }

@@ -82,6 +82,26 @@ public class EtudiantController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEtudiant(@PathVariable Long id) {
+        try {
+            etudiantService.deleteEtudiantById(id);
+            return ResponseEntity.ok("Etudiant with ID " + id + " has been deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getEtudiantIdByUserId(@PathVariable Long userId) {
+        try {
+            Long etudiantId = etudiantService.getEtudiantIdByUserId(userId);
+            return ResponseEntity.ok(etudiantId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }
 
 

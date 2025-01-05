@@ -1,4 +1,4 @@
-package STAGE.stage.services.impl;
+package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.StageDTO;
 import STAGE.stage.models.Etudiant;

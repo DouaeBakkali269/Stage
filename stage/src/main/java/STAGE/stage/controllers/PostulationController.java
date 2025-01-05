@@ -67,4 +67,20 @@ public class PostulationController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Delete an Offer by its ID.
+     *
+     * @param id the ID of the offer to delete
+     * @return ResponseEntity indicating the result
+     */
+    @DeleteMapping("/postulations/{id}")
+    public ResponseEntity<String> deletePostulation(@PathVariable Long id) {
+        try {
+            postulationService.deletePostulationById(id);
+            return ResponseEntity.ok("Postulation with ID " + id + " has been deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package STAGE.stage.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import STAGE.stage.dtos.RHDTO;
 import STAGE.stage.models.RH;
@@ -46,4 +48,15 @@ public class RHController {
     public List<RH> getRHByEntreprise(@PathVariable Long entrepriseId) {
         return rhService.getRHByEntreprise(entrepriseId);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getRHIdByUserId(@PathVariable Long userId) {
+        try {
+            Long rhId = rhService.getRHIdByUserId(userId);
+            return ResponseEntity.ok(rhId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }

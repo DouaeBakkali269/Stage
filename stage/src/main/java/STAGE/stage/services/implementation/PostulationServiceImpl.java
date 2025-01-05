@@ -76,5 +76,13 @@ public class PostulationServiceImpl implements PostulationService {
         postulation.setEtatPostulation(etat);
         postulationRepository.save(postulation);
     }
+
+    @Override
+    public void deletePostulationById(Long id) {
+        if (!postulationRepository.existsById(id)) {
+            throw new IllegalArgumentException("Postulation with ID " + id + " does not exist.");
+        }
+        postulationRepository.deleteById(id);
+    }
 }
 

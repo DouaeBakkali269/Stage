@@ -3,6 +3,8 @@ package STAGE.stage.controllers;
 import STAGE.stage.dtos.ChefDeFiliereDTO;
 import STAGE.stage.services.ChefDeFiliereService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,5 +70,18 @@ public class ChefDeFiliereController {
     @GetMapping("/by-filiere/{filiereId}")
     public List<ChefDeFiliereDTO> getChefsByFiliereId(@PathVariable Long filiereId) {
         return chefDeFiliereService.getChefsByFiliereId(filiereId);
+    }
+
+    /**
+     * Get all chefs de filière by User ID
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Long> getChefDeFiliereIdByUserId(@PathVariable Long userId) {
+        try {
+            Long chefDeFiliereId = chefDeFiliereService.getChefDeFiliereIdIdByUserId(userId);
+            return ResponseEntity.ok(chefDeFiliereId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

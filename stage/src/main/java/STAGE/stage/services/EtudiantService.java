@@ -12,4 +12,8 @@ public interface EtudiantService {
     List<EtudiantDTO> getEtudiantsByEcole(Long ecoleId);
 
     List<EtudiantDTO> getEtudiantsByFiliere(Long filiereId);
+
+    void deleteEtudiantById(Long id);
+
+    Long getEtudiantIdByUserId(Long userId);
 }
