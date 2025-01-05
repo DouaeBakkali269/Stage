@@ -20,4 +20,6 @@ public class EncadrantDTO {
     private String telephone;
     private Long entrepriseId;
     private List<Long> stageIds;
+    private Long userId;
+
 }

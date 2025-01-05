@@ -17,5 +17,7 @@ public class AdminDTO {
     private String emailAd;
     private String motDePasse;
     private String telephone;
+    private Long userId;
+
 }
 

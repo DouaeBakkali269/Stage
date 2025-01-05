@@ -16,5 +16,7 @@ public class ChefDeFiliereDTO {
     private String motDePasse;
     private String telephone;
     private Long filiereId; // Utilisé pour associer une filière
-    private Long ecoleId;   // Utilisé pour associer une école
+    private Long ecoleId;
+    private Long userId;
+// Utilisé pour associer une école
 }

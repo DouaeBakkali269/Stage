@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface EntityMapper {
     // Admin Mapping
+    @Mapping(source = "user.id", target = "userId")
     AdminDTO toDto(Admin admin);
+    @Mapping(source = "userId", target = "user.id")
     Admin toEntity(AdminDTO adminDTO);
 
     // Filiere Mapping
@@ -22,9 +24,11 @@ public interface EntityMapper {
     // ChefDeFiliere Mapping
     @Mapping(source = "ecole.idEcole", target = "ecoleId")
     @Mapping(source = "filiere.idFiliere", target = "filiereId")
+    @Mapping(source = "user.id", target = "userId")
     ChefDeFiliereDTO toDto(ChefDeFiliere chefDeFiliere);
     @Mapping(source = "ecoleId", target = "ecole.idEcole")
     @Mapping(source = "filiereId", target = "filiere.idFiliere")
+    @Mapping(source = "userId", target = "user.id")
     ChefDeFiliere toEntity(ChefDeFiliereDTO chefDeFiliereDTO);
 
     // Etudiant Mapping
@@ -65,20 +69,26 @@ public interface EntityMapper {
 
     // RH Mapping
     @Mapping(source = "entreprise.idEntreprise", target = "entrepriseId")
+    @Mapping(source = "user.id", target = "userId")
     RHDTO toDto(RH rh);
     @Mapping(source = "entrepriseId", target = "entreprise.idEntreprise")
+    @Mapping(source = "userId", target = "user.id")
     RH toEntity(RHDTO rhDTO);
 
     // CoordinateurDeStage Mapping
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "ecole.idEcole", target = "ecoleId")
     CoordinateurDeStageDTO toDto(CoordinateurDeStage coordinateurDeStage);
     @Mapping(source = "ecoleId", target = "ecole.idEcole")
+    @Mapping(source = "userId", target = "user.id")
     CoordinateurDeStage toEntity(CoordinateurDeStageDTO coordinateurDeStageDTO);
 
     // Encadrant Mapping
     @Mapping(source = "entreprise.idEntreprise", target = "entrepriseId")
+    @Mapping(source = "user.id", target = "userId")
     EncadrantDTO toDto(Encadrant encadrant);
     @Mapping(source = "entrepriseId", target = "entreprise.idEntreprise")
+    @Mapping(source = "userId", target = "user.id")
     Encadrant toEntity(EncadrantDTO encadrantDTO);
 
     // Entreprise Mapping
@@ -87,14 +97,18 @@ public interface EntityMapper {
 
     // CompteEcole Mapping
     @Mapping(source = "ecole.idEcole", target = "ecoleId")
+    @Mapping(source = "user.id", target = "userId")
     CompteEcoleDTO toDto(CompteEcole compteEcole);
     @Mapping(source = "ecoleId", target = "ecole.idEcole")
+    @Mapping(source = "userId", target = "user.id")
     CompteEcole toEntity(CompteEcoleDTO compteEcoleDTO);
 
     // CompteEntreprise Mapping
     @Mapping(source = "entreprise.idEntreprise", target = "entrepriseId")
+    @Mapping(source = "user.id", target = "userId")
     CompteEntrepriseDTO toDto(CompteEntreprise compteEntreprise);
     @Mapping(source = "entrepriseId", target = "entreprise.idEntreprise")
+    @Mapping(source = "userId", target = "user.id")
     CompteEntreprise toEntity(CompteEntrepriseDTO compteEntrepriseDTO);
 
     // Entretien Mapping

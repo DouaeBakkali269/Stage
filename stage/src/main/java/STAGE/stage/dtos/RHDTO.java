@@ -20,4 +20,6 @@ public class RHDTO {
     private String telephone;
     private Long entrepriseId;
     private List<Long> offreIds;
+    private Long userId;
+
 }

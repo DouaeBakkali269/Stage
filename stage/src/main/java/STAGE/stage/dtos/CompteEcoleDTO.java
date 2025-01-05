@@ -19,5 +19,7 @@ public class CompteEcoleDTO {
     private String telephone;
     private String role;
     private Long ecoleId; // Reference to Ecole ID
+    private Long userId;
+
 }
 

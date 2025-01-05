@@ -18,4 +18,6 @@ public class CompteEntrepriseDTO {
     private String motDePasse; // Mot de passe hashé
     private String telephone;
     private Long entrepriseId;
+    private Long userId;
+
 }
