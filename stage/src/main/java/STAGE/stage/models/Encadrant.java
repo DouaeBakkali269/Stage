@@ -32,6 +32,9 @@ public class Encadrant {
     @OneToMany(mappedBy = "encadrant", cascade = CascadeType.ALL)
     private List<Stage> stages;
 
+    @OneToMany(mappedBy = "encadrant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> evaluations; // An Encadrant can evaluate many Stages
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id") // Explicitly mapping foreign key
     private User user;

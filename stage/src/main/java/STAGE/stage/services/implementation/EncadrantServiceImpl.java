@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import STAGE.stage.models.Encadrant;
 import STAGE.stage.models.User;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,5 +49,43 @@ public class EncadrantServiceImpl implements EncadrantService {
         encadrant.setUser(user); // Associate User
 
         return mapper.toDto(encadrantRepository.save(encadrant));
+    }
+    @Override
+    public EncadrantDTO updateEncadrant(Long id, EncadrantDTO dto) {
+        Encadrant existing = encadrantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encadrant not found"));
+
+        existing.setNom(dto.getNom());
+        existing.setPrenom(dto.getPrenom());
+        existing.setEmail(dto.getEmail());
+        existing.setTelephone(dto.getTelephone());
+
+        if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+            existing.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        }
+
+        return mapper.toDto(encadrantRepository.save(existing));
+    }
+
+    @Override
+    public EncadrantDTO getEncadrantById(Long id) {
+        Encadrant encadrant = encadrantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encadrant not found"));
+        return mapper.toDto(encadrant);
+    }
+
+    @Override
+    public List<EncadrantDTO> getAllEncadrants() {
+        return encadrantRepository.findAll().stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteEncadrant(Long id) {
+        if (!encadrantRepository.existsById(id)) {
+            throw new RuntimeException("Encadrant not found");
+        }
+        encadrantRepository.deleteById(id);
     }
 }

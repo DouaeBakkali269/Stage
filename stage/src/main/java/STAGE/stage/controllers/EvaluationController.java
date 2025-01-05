@@ -43,4 +43,13 @@ public class EvaluationController {
     public List<EvaluationDTO> getEvaluationsByEncadrantId(@PathVariable Long encadrantId) {
         return evaluationService.getEvaluationsByEncadrantId(encadrantId);
     }
+    @GetMapping("/by-stage/{stageId}")
+    public List<EvaluationDTO> getEvaluationsByStageId(@PathVariable Long stageId) {
+        return evaluationService.getEvaluationsByStageId(stageId);
+    }
+
+    @GetMapping("/by-etudiant/{etudiantId}")
+    public List<EvaluationDTO> getEvaluationsByEtudiantId(@PathVariable Long etudiantId) {
+        return evaluationService.getEvaluationsByEtudiantId(etudiantId);
+    }
 }

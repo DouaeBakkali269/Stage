@@ -77,4 +77,18 @@ public class EvaluationServiceImpl implements EvaluationService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EvaluationDTO> getEvaluationsByStageId(Long stageId) {
+        return evaluationRepository.findByStage_IdStage(stageId).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EvaluationDTO> getEvaluationsByEtudiantId(Long etudiantId) {
+        return evaluationRepository.findByStage_Etudiant_IdEtu(etudiantId).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

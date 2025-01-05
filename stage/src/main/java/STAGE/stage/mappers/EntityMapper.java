@@ -104,4 +104,12 @@ public interface EntityMapper {
     @Mapping(source = "offreId", target = "offre.idOffre")
     @Mapping(source = "etudiantId", target = "etudiant.idEtu")
     Entretien toEntity(EntretienDTO entretienDTO);
+
+    // Map between Evaluation and its DTO
+    @Mapping(source = "encadrant.idEncadrant", target = "encadrantId")
+    @Mapping(source = "stage.idStage", target = "stageId")
+    EvaluationDTO toDto(Evaluation evaluation);
+    @Mapping(source = "encadrantId", target = "encadrant.idEncadrant")
+    @Mapping(source = "stageId", target = "stage.idStage")
+    Evaluation toEntity(EvaluationDTO evaluationDTO);
 }

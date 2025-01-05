@@ -11,4 +11,6 @@ public interface EvaluationService {
     List<EvaluationDTO> getAllEvaluations();
     void deleteEvaluation(Long id);
     List<EvaluationDTO> getEvaluationsByEncadrantId(Long encadrantId); // Optional filtering
+    List<EvaluationDTO> getEvaluationsByStageId(Long stageId);
+    List<EvaluationDTO> getEvaluationsByEtudiantId(Long etudiantId);
 }

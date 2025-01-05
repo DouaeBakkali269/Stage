@@ -44,4 +44,43 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
 
         return mapper.toDto(coordinateurDeStageRepository.save(coordinateur));
     }
+
+    @Override
+    public CoordinateurDeStageDTO updateCoordinateurDeStage(Long id, CoordinateurDeStageDTO dto) {
+        CoordinateurDeStage existing = coordinateurDeStageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Coordinateur de Stage not found"));
+
+        existing.setNom(dto.getNom());
+        existing.setPrenom(dto.getPrenom());
+        existing.setEmail(dto.getEmail());
+        existing.setTelephone(dto.getTelephone());
+
+        if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+            existing.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        }
+
+        return mapper.toDto(coordinateurDeStageRepository.save(existing));
+    }
+
+    @Override
+    public CoordinateurDeStageDTO getCoordinateurDeStageById(Long id) {
+        CoordinateurDeStage coordinateur = coordinateurDeStageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Coordinateur de Stage not found"));
+        return mapper.toDto(coordinateur);
+    }
+
+    @Override
+    public List<CoordinateurDeStageDTO> getAllCoordinateursDeStage() {
+        return coordinateurDeStageRepository.findAll().stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteCoordinateurDeStage(Long id) {
+        if (!coordinateurDeStageRepository.existsById(id)) {
+            throw new RuntimeException("Coordinateur de Stage not found");
+        }
+        coordinateurDeStageRepository.deleteById(id);
+    }
 }

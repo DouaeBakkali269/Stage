@@ -1,24 +1,20 @@
 package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.ChefDeFiliereDTO;
-import STAGE.stage.models.ChefDeFiliere;
-import STAGE.stage.models.Ecole;
-import STAGE.stage.models.Etudiant;
-import STAGE.stage.repositories.ChefDeFiliereRepository;
-import STAGE.stage.repositories.EcoleRepository;
-import STAGE.stage.repositories.EtudiantRepository;
+import STAGE.stage.models.*;
+import STAGE.stage.repositories.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import STAGE.stage.dtos.FiliereDTO;
 import STAGE.stage.mappers.EntityMapper;
-import STAGE.stage.models.Filiere;
-import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.services.FiliereService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FiliereServiceImpl implements FiliereService {
 
     @Autowired
@@ -28,6 +24,9 @@ public class FiliereServiceImpl implements FiliereService {
     private ChefDeFiliereRepository chefDeFiliereRepository;
     private EtudiantRepository etudiantRepository;
     private EcoleRepository ecoleRepository;
+    private final VisibleOffreRepository visibleOffreRepository;
+    private final OffreRepository offreRepository;
+
     @Autowired
     private EntityMapper entityMapper;
 
@@ -92,5 +91,29 @@ public class FiliereServiceImpl implements FiliereService {
             throw new RuntimeException("Filiere not found with id: " + id);
         }
         filiereRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Offre> getVisibleOffresByFiliere(Long filiereId) {
+        // Find all visible offers for a given Filiere
+        return visibleOffreRepository.findByFiliere_IdFiliere(filiereId).stream()
+                .filter(VisibleOffre::getVisible)
+                .map(VisibleOffre::getOffre)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public void setOffreVisibility(Long idFiliere, Long idOffre, Boolean visible) {
+        Filiere filiere = filiereRepository.findById(idFiliere)
+                .orElseThrow(() -> new RuntimeException("Filiere not found"));
+        Offre offre = offreRepository.findById(idOffre)
+                .orElseThrow(() -> new RuntimeException("Offre not found"));
+
+        // Check if a visibility record already exists
+        VisibleOffre visibleOffre = visibleOffreRepository.findByFiliere_IdFiliereAndOffre_IdOffre(idFiliere, idOffre)
+                .orElse(new VisibleOffre(null, filiere, offre, visible));
+
+        // Update visible flag
+        visibleOffre.setVisible(visible);
+        visibleOffreRepository.save(visibleOffre);
     }
 }
