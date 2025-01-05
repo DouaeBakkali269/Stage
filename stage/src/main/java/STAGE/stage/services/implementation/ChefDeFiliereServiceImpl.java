@@ -97,4 +97,18 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
     public void deleteChefDeFiliere(Long id) {
         chefRepository.deleteById(id);
     }
+
+    @Override
+    public List<ChefDeFiliereDTO> getChefsByEcoleId(Long ecoleId) {
+        return chefRepository.findByEcole_IdEcole(ecoleId).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChefDeFiliereDTO> getChefsByFiliereId(Long filiereId) {
+        return chefRepository.findByFiliere_IdFiliere(filiereId).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

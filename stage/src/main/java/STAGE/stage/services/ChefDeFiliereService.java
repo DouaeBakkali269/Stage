@@ -10,5 +10,9 @@ public interface ChefDeFiliereService {
     ChefDeFiliereDTO getChefDeFiliereById(Long id);
     List<ChefDeFiliereDTO> getAllChefs();
     void deleteChefDeFiliere(Long id);
+
+    List<ChefDeFiliereDTO> getChefsByEcoleId(Long ecoleId);
+
+    List<ChefDeFiliereDTO> getChefsByFiliereId(Long filiereId);
 }
 
