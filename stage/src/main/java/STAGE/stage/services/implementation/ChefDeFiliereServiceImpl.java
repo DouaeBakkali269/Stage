@@ -66,6 +66,17 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
         Ecole ecole = ecoleRepository.findById(dto.getEcoleId())
                 .orElseThrow(() -> new RuntimeException("École introuvable"));
 
+        // Update User (email and password) if needed
+        if (dto.getUserId() != null) {
+            User user = userrepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            user.setEmail(dto.getEmail()); // Update email
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
+
         chef.setNom(dto.getNom());
         chef.setPrenom(dto.getPrenom());
         chef.setEmail(dto.getEmail());

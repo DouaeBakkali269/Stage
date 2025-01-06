@@ -106,6 +106,31 @@ public class EtudiantServiceImpl implements EtudiantService {
             throw new IllegalArgumentException("Etudiant with userId " + userId + " does not exist.");
         }
     }
+    @Override
+    public EtudiantDTO updateEtudiant(Long id, EtudiantDTO studentData) {
+        // Fetch the existing Etudiant entity by ID
+        Etudiant existingEtudiant = etudiantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
+        Filiere filiere = filiereRepository.findById(studentData.getFiliereId())
+                .orElseThrow(() -> new IllegalArgumentException("Filiere not found with ID: " + studentData.getFiliereId()));
+        // Update fields
+        existingEtudiant.setNom(studentData.getNom());
+        existingEtudiant.setPrenom(studentData.getPrenom());
+        existingEtudiant.setTel(studentData.getTel());
+        existingEtudiant.setEmail(studentData.getEmail());
+        existingEtudiant.setMotDePasse(studentData.getMotDePasse());
+        existingEtudiant.setCodeEtu(studentData.getCodeEtu());
+        existingEtudiant.setPhotoProfil(studentData.getPhotoProfil());
+        existingEtudiant.setPhotoCouverture(studentData.getPhotoCouverture());
+        existingEtudiant.setStatutEtudiant(studentData.getStatutEtudiant());
+        existingEtudiant.setFiliere(filiere);
+
+        // Save the updated entity to the database
+        Etudiant updatedEtudiant = etudiantRepository.save(existingEtudiant);
+
+        // Transform the updated entity back into a DTO and return it
+        return mapper.toDto(updatedEtudiant);
+    }
 }
 
 

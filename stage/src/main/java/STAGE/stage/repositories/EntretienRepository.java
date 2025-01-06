@@ -18,4 +18,6 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
     @Query("SELECT COUNT(e) FROM Entretien e WHERE e.offre.entreprise.idEntreprise = :companyId")
     long countByEntrepriseIdEntreprise(@Param("companyId") Long companyId);
 
+    List<Entretien> findByEtudiantIdEtu(Long etudiantId);
+
 }

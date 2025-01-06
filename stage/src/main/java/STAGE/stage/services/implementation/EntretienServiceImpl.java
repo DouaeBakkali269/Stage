@@ -1,6 +1,7 @@
 package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.EntretienDTO;
+import STAGE.stage.mappers.EntityMapper;
 import STAGE.stage.models.Entretien;
 import STAGE.stage.models.Etudiant;
 import STAGE.stage.models.Offre;
@@ -25,6 +26,8 @@ public class EntretienServiceImpl implements EntretienService {
 
     @Autowired
     private EtudiantRepository etudiantRepository;
+    @Autowired
+    private EntityMapper entityMapper;
 
     @Override
     public EntretienDTO createEntretien(EntretienDTO entretienDTO) {
@@ -130,5 +133,16 @@ public class EntretienServiceImpl implements EntretienService {
             dto.setEtudiantId(entretien.getEtudiant().getIdEtu());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EntretienDTO> getEntretiensByEtudiant(Long etudiantId) {
+        // Fetch interviews by student ID
+        List<Entretien> entretiens = entretienRepository.findByEtudiantIdEtu(etudiantId);
+
+        // Convert entities to DTOs
+        return entretiens.stream()
+                .map(entityMapper::toDto) // Assuming entretienMapper is available
+                .collect(Collectors.toList());
     }
 }

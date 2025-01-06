@@ -11,4 +11,6 @@ public interface EntretienService {
     EntretienDTO getEntretienById(Long id);
     void deleteEntretien(Long id);
     List<EntretienDTO> getEntretiensByEntrepriseId(Long entrepriseId);
+
+    List<EntretienDTO> getEntretiensByEtudiant(Long etudiantId);
 }

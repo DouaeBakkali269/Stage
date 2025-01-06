@@ -42,6 +42,7 @@ public class AdminServiceImpl implements AdminService {
         user.setRole("ADMIN");// 2. Create the Admin entity
         Admin admin = new Admin();
         admin.setNomAd(adminDTO.getNomAd());
+        admin.setMotDePasse(encodedPassword);
         admin.setPrenomAd(adminDTO.getPrenomAd());
         admin.setTelephone(adminDTO.getTelephone());
         admin.setUser(user); // Link User to Admin

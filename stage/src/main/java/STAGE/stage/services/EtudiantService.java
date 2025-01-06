@@ -16,4 +16,6 @@ public interface EtudiantService {
     void deleteEtudiantById(Long id);
 
     Long getEtudiantIdByUserId(Long userId);
+
+    EtudiantDTO updateEtudiant(Long id, EtudiantDTO dto);
 }

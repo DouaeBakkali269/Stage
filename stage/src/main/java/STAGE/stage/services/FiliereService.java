@@ -14,6 +14,7 @@ public interface FiliereService {
     void deleteFiliere(Long id);
     List<Offre> getVisibleOffresByFiliere(Long filiereId);
     void setOffreVisibility(Long filiereId, Long offreId, Boolean visible);
+    List<FiliereDTO> getFilieresByEcoleId(Long idEcole);
 }
 
 

@@ -46,6 +46,7 @@ public class CompteEntrepriseServiceImpl implements CompteEntrepriseService {
 
         CompteEntreprise compteEntreprise = new CompteEntreprise();
         compteEntreprise.setNom(dto.getNom());
+        compteEntreprise.setPrenom(dto.getPrenom());
         compteEntreprise.setEmail(dto.getEmail());
         compteEntreprise.setTelephone(dto.getTelephone());
         compteEntreprise.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
@@ -60,14 +61,21 @@ public class CompteEntrepriseServiceImpl implements CompteEntrepriseService {
         CompteEntreprise compte = compteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Compte introuvable"));
 
-        Entreprise entreprise = entrepriseRepository.findById(dto.getIdCompte())
-                .orElseThrow(() -> new RuntimeException("Entreprise introuvable"));
 
+        // Update User (email and password) if needed
+        if (dto.getUserId() != null) {
+            User user = userrepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            user.setEmail(dto.getEmail()); // Update email
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
         compte.setNom(dto.getNom());
         compte.setPrenom(dto.getPrenom());
         compte.setEmail(dto.getEmail());
         compte.setTelephone(dto.getTelephone());
-        compte.setEntreprise(entreprise);
 
         return mapper.toDto(compteRepository.save(compte));
     }

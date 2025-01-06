@@ -101,6 +101,20 @@ public class EtudiantController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+    // Update an existing student by ID
+    @PutMapping("/{id}")
+    public ResponseEntity<EtudiantDTO> updateEtudiant(
+            @PathVariable Long id,
+            @RequestBody EtudiantDTO studentData) {
+        try {
+            EtudiantDTO updatedEtudiant = etudiantService.updateEtudiant(id, studentData);
+            return ResponseEntity.ok(updatedEtudiant);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
 
 }
 

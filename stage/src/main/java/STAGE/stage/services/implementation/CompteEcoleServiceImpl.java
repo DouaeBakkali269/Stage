@@ -45,6 +45,7 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
 
         CompteEcole compteEcole = new CompteEcole();
         compteEcole.setNom(dto.getNom());
+        compteEcole.setPrenom(dto.getPrenom());
         compteEcole.setEmail(dto.getEmail());
         compteEcole.setTelephone(dto.getTelephone());
         compteEcole.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
@@ -61,14 +62,23 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
         CompteEcole compte = compteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Compte introuvable"));
 
-        Ecole ecole = ecoleRepository.findById(dto.getEcoleId())
-                .orElseThrow(() -> new RuntimeException("École introuvable"));
+
+
+        // Update User (email and password) if needed
+        if (dto.getUserId() != null) {
+            User user = userrepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            user.setEmail(dto.getEmail()); // Update email
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
 
         compte.setNom(dto.getNom());
         compte.setPrenom(dto.getPrenom());
         compte.setEmail(dto.getEmail());
         compte.setTelephone(dto.getTelephone());
-        compte.setEcole(ecole);
 
         return mapper.toDto(compteRepository.save(compte));
     }

@@ -60,7 +60,16 @@ public class EncadrantServiceImpl implements EncadrantService {
         existing.setPrenom(dto.getPrenom());
         existing.setEmail(dto.getEmail());
         existing.setTelephone(dto.getTelephone());
-
+        // Update User (email and password) if needed
+        if (dto.getUserId() != null) {
+            User user = userrepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            user.setEmail(dto.getEmail()); // Update email
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
         if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
             existing.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
         }

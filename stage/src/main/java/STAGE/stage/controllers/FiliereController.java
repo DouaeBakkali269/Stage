@@ -50,5 +50,15 @@ public class FiliereController {
         filiereService.deleteFiliere(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/ecole/{idEcole}")
+    public ResponseEntity<List<FiliereDTO>> getFilieresByEcoleId(@PathVariable Long idEcole) {
+        try {
+            List<FiliereDTO> filieres = filiereService.getFilieresByEcoleId(idEcole);
+            return new ResponseEntity<>(filieres, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 

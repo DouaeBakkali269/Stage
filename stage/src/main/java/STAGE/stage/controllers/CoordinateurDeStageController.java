@@ -63,4 +63,10 @@ public class CoordinateurDeStageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/by-ecole/{ecoleId}")
+    public ResponseEntity<List<CoordinateurDeStageDTO>> getCoordinateursByEcoleId(@PathVariable Long ecoleId) {
+        List<CoordinateurDeStageDTO> coordinateurs = coordinateurDeDStageService.getCoordinateursByEcoleId(ecoleId);
+        return ResponseEntity.ok(coordinateurs);
+    }
 }

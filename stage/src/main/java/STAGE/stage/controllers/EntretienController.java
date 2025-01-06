@@ -3,6 +3,7 @@ package STAGE.stage.controllers;
 import STAGE.stage.dtos.EntretienDTO;
 import STAGE.stage.services.EntretienService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,4 +43,11 @@ public class EntretienController {
     public List<EntretienDTO> getEntretiensByEntrepriseId(@PathVariable Long entrepriseId) {
         return entretienService.getEntretiensByEntrepriseId(entrepriseId);
     }
+
+    @GetMapping("/etudiant/{etudiantId}")
+    public ResponseEntity<List<EntretienDTO>> getEntretiensByEtudiant(@PathVariable Long etudiantId) {
+        List<EntretienDTO> entretiens = entretienService.getEntretiensByEtudiant(etudiantId);
+        return ResponseEntity.ok(entretiens);
+    }
+
 }

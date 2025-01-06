@@ -82,6 +82,18 @@ public class RHServiceImpl implements RHService {
         rh.setMotDePasse(rhDTO.getMotDePasse());
         rh.setTelephone(rhDTO.getTelephone());
 
+
+        // Update User (email and password) if needed
+        if (rhDTO.getUserId() != null) {
+            User user = userrepository.findById(rhDTO.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + rhDTO.getUserId()));
+            user.setEmail(rhDTO.getEmail()); // Update email
+            if (rhDTO.getMotDePasse() != null && !rhDTO.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(rhDTO.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
+
         Entreprise entreprise = entrepriseRepository.findById(rhDTO.getEntrepriseId())
                 .orElseThrow(() -> new RuntimeException("Entreprise introuvable"));
         rh.setEntreprise(entreprise);

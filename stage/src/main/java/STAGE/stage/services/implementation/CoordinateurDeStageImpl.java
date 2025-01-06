@@ -2,7 +2,6 @@ package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.CoordinateurDeStageDTO;
 import STAGE.stage.mappers.EntityMapper;
-import STAGE.stage.models.CompteEntreprise;
 import STAGE.stage.models.CoordinateurDeStage;
 import STAGE.stage.models.User;
 import STAGE.stage.repositories.CoordinateurDeStageRepository;
@@ -60,6 +59,17 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
         existing.setEmail(dto.getEmail());
         existing.setTelephone(dto.getTelephone());
 
+        // Update User (email and password) if needed
+        if (dto.getUserId() != null) {
+            User user = userrepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            user.setEmail(dto.getEmail()); // Update email
+            if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
+
         if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
             existing.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
         }
@@ -97,5 +107,13 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
         } else {
             throw new IllegalArgumentException("CompteEntreprise with userId " + userId + " does not exist.");
         }
+    }
+
+    @Override
+    public List<CoordinateurDeStageDTO> getCoordinateursByEcoleId(Long ecoleId) {
+        return coordinateurDeStageRepository.findByEcoleIdEcole(ecoleId)
+                .stream()
+                .map(mapper::toDto) // Assuming a mapper is used to convert entities to DTOs
+                .collect(Collectors.toList());
     }
 }

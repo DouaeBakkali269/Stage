@@ -116,4 +116,12 @@ public class FiliereServiceImpl implements FiliereService {
         visibleOffre.setVisible(visible);
         visibleOffreRepository.save(visibleOffre);
     }
+
+    @Override
+    public List<FiliereDTO> getFilieresByEcoleId(Long idEcole) {
+        return filiereRepository.findByEcoleIdEcole(idEcole)
+                .stream()
+                .map(entityMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
