@@ -11,7 +11,7 @@ public class FiliereDTO {
     private Long idFiliere; // Identifiant de la filière
     private String nomFiliere; // Nom de la filière
     private String abrvFiliere; // Abréviation de la filière
-    private Long EcoleId;
+    private Long ecoleId;
 
 
     // DTO du chef de filière (relation One-to-One)

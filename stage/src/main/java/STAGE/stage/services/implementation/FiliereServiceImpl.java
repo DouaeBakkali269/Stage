@@ -24,6 +24,7 @@ public class FiliereServiceImpl implements FiliereService {
     @Autowired
     private ChefDeFiliereRepository chefDeFiliereRepository;
     private EtudiantRepository etudiantRepository;
+    @Autowired
     private EcoleRepository ecoleRepository;
     private final VisibleOffreRepository visibleOffreRepository;
     private final OffreRepository offreRepository;

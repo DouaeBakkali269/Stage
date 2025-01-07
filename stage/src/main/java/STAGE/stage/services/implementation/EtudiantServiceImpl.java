@@ -118,8 +118,8 @@ public class EtudiantServiceImpl implements EtudiantService {
         existingEtudiant.setPrenom(studentData.getPrenom());
         existingEtudiant.setTel(studentData.getTel());
         existingEtudiant.setEmail(studentData.getEmail());
-        existingEtudiant.setMotDePasse(studentData.getMotDePasse());
-        existingEtudiant.setCodeEtu(studentData.getCodeEtu());
+
+
         existingEtudiant.setPhotoProfil(studentData.getPhotoProfil());
         existingEtudiant.setPhotoCouverture(studentData.getPhotoCouverture());
         existingEtudiant.setStatutEtudiant(studentData.getStatutEtudiant());

@@ -42,7 +42,7 @@ public class StageServiceImpl implements StageService {
         stage.setDuree(stageDTO.getDuree());
         stage.setLocalisation(stageDTO.getLocalisation());
         stage.setMontantRemuneration(stageDTO.getMontantRemuneration());
-        stage.setStatut(stageDTO.getStatut());
+        stage.setStatut(stageDTO.getStatut()); // status at the begining is "nouveau"
         stage.setType(stageDTO.getType());
 
         Offre offre = offreRepository.findById(stageDTO.getOffreId())

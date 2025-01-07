@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-05T23:00:29+0100",
+    date = "2025-01-07T20:03:50+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -91,6 +91,8 @@ public class EntityMapperImpl implements EntityMapper {
 
         FiliereDTO filiereDTO = new FiliereDTO();
 
+        filiereDTO.setEcoleId( filiereEcoleIdEcole( filiere ) );
+        filiereDTO.setChefDeFiliereId( filiereChefDeFiliereIdCf( filiere ) );
         filiereDTO.setIdFiliere( filiere.getIdFiliere() );
         filiereDTO.setNomFiliere( filiere.getNomFiliere() );
         filiereDTO.setAbrvFiliere( filiere.getAbrvFiliere() );
@@ -106,6 +108,8 @@ public class EntityMapperImpl implements EntityMapper {
 
         Filiere filiere = new Filiere();
 
+        filiere.setEcole( filiereDTOToEcole( filiereDTO ) );
+        filiere.setChefDeFiliere( filiereDTOToChefDeFiliere( filiereDTO ) );
         filiere.setIdFiliere( filiereDTO.getIdFiliere() );
         filiere.setNomFiliere( filiereDTO.getNomFiliere() );
         filiere.setAbrvFiliere( filiereDTO.getAbrvFiliere() );
@@ -748,6 +752,60 @@ public class EntityMapperImpl implements EntityMapper {
         user.setId( adminDTO.getUserId() );
 
         return user;
+    }
+
+    private Long filiereEcoleIdEcole(Filiere filiere) {
+        if ( filiere == null ) {
+            return null;
+        }
+        Ecole ecole = filiere.getEcole();
+        if ( ecole == null ) {
+            return null;
+        }
+        Long idEcole = ecole.getIdEcole();
+        if ( idEcole == null ) {
+            return null;
+        }
+        return idEcole;
+    }
+
+    private Long filiereChefDeFiliereIdCf(Filiere filiere) {
+        if ( filiere == null ) {
+            return null;
+        }
+        ChefDeFiliere chefDeFiliere = filiere.getChefDeFiliere();
+        if ( chefDeFiliere == null ) {
+            return null;
+        }
+        Long idCf = chefDeFiliere.getIdCf();
+        if ( idCf == null ) {
+            return null;
+        }
+        return idCf;
+    }
+
+    protected Ecole filiereDTOToEcole(FiliereDTO filiereDTO) {
+        if ( filiereDTO == null ) {
+            return null;
+        }
+
+        Ecole ecole = new Ecole();
+
+        ecole.setIdEcole( filiereDTO.getEcoleId() );
+
+        return ecole;
+    }
+
+    protected ChefDeFiliere filiereDTOToChefDeFiliere(FiliereDTO filiereDTO) {
+        if ( filiereDTO == null ) {
+            return null;
+        }
+
+        ChefDeFiliere chefDeFiliere = new ChefDeFiliere();
+
+        chefDeFiliere.setIdCf( filiereDTO.getChefDeFiliereId() );
+
+        return chefDeFiliere;
     }
 
     private Long chefDeFiliereEcoleIdEcole(ChefDeFiliere chefDeFiliere) {
