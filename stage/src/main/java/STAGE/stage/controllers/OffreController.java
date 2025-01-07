@@ -41,7 +41,7 @@ public class OffreController {
     }
 
     @GetMapping("/entreprise/{entrepriseId}")
-    public List<Offre> getOffresByEntreprise(@PathVariable Long entrepriseId) {
+    public List<OffreDTO> getOffresByEntreprise(@PathVariable Long entrepriseId) {
         return offreService.getOffresByEntreprise(entrepriseId);
     }
 
@@ -51,7 +51,7 @@ public class OffreController {
      * @param id the ID of the offer to delete
      * @return ResponseEntity indicating the result
      */
-    @DeleteMapping("/offers/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
         try {
             offreService.deleteOfferById(id);
@@ -61,5 +61,14 @@ public class OffreController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OffreDTO> getOffreById(@PathVariable Long id) {
+        try {
+            OffreDTO offreDTO = offreService.getOffreById(id);
+            return new ResponseEntity<>(offreDTO, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 }
 

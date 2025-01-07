@@ -14,7 +14,9 @@ public interface OffreService {
 
     List<OffreDTO> getOffresByRH(Long rhId);
 
-    List<Offre> getOffresByEntreprise(Long entrepriseId);
+    List<OffreDTO> getOffresByEntreprise(Long entrepriseId);
 
     void deleteOfferById(Long id);
+
+    OffreDTO getOffreById(Long id);
 }

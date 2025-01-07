@@ -1,14 +1,9 @@
 package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.StageDTO;
-import STAGE.stage.models.Etudiant;
-import STAGE.stage.models.Offre;
-import STAGE.stage.models.Stage;
-import STAGE.stage.models.Encadrant;
-import STAGE.stage.repositories.EtudiantRepository;
-import STAGE.stage.repositories.OffreRepository;
-import STAGE.stage.repositories.StageRepository;
-import STAGE.stage.repositories.EncadrantRepository;
+import STAGE.stage.mappers.EntityMapper;
+import STAGE.stage.models.*;
+import STAGE.stage.repositories.*;
 import STAGE.stage.services.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +25,12 @@ public class StageServiceImpl implements StageService {
 
     @Autowired
     private EncadrantRepository encadrantRepository;
+    @Autowired
+    private ChefDeFiliereRepository chefDeFiliereRepository;
+    @Autowired
+    private FiliereRepository filiereRepository;
+    @Autowired
+    private EntityMapper mapper;
 
     @Override
     public StageDTO createStage(StageDTO stageDTO) {
@@ -153,5 +154,99 @@ public class StageServiceImpl implements StageService {
         dto.setEtudiantId(stage.getEtudiant().getIdEtu());
         dto.setEncadrantId(stage.getEncadrant().getIdEncadrant());
         return dto;
+    }
+
+    @Override
+    public List<StageDTO> getStagesByCF(Long idCf) {
+        // Fetch the ChefDeFiliere entity by idCf
+        ChefDeFiliere chefDeFiliere = chefDeFiliereRepository.findById(idCf)
+                .orElseThrow(() -> new RuntimeException("ChefDeFiliere not found with id: " + idCf));
+
+        // Access the associated Filiere
+        Filiere filiere = chefDeFiliere.getFiliere();
+
+        // Check if Filiere is not null to avoid NullPointerException
+
+            Long filiereId = filiere.getIdFiliere();
+
+
+        // Step 2: Get Etudiant IDs by Filiere ID
+            List<Long> etudiantIds = etudiantRepository.findByFiliereIdFiliere(filiereId)
+                    .stream()
+                    .map(Etudiant::getIdEtu)
+                    .toList();
+
+            // Step 3: Get Stages by Etudiant IDs with status "To validate"
+            List<Stage> stages = stageRepository.findByEtudiantIdEtuInAndStatut(etudiantIds, "To validate");
+
+            // Step 4: Map entities to DTOs and return result
+            return stages.stream()
+                    .map(mapper::toDto)
+                    .toList();
+        }
+
+        @Override
+        public List<StageDTO> getValidatedStagesByEcoleId(Long ecoleId) {
+            // Fetch validated stages via repository
+            List<Stage> stages = stageRepository.findValidatedStagesByEcoleId(ecoleId);
+
+            // Map list of Stage entities to StageDTO
+            return stages.stream()
+                    .map(stage -> new StageDTO(
+                            stage.getIdStage(), stage.getTitre(), stage.getDescription(),
+                            stage.getDateDebut(), stage.getDateFin(), stage.getDuree(),
+                            stage.getLocalisation(), stage.getMontantRemuneration(),
+                            stage.getStatut(), stage.getType(),
+                            stage.getEtudiant().getIdEtu(),
+                            stage.getOffre() != null ? stage.getOffre().getIdOffre() : null,
+                            stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null))
+                    .toList();
+        }
+
+    @Override
+    public List<StageDTO> getAValiderStagesByEcoleId(Long ecoleId) {
+        // Fetch validated stages via repository
+        List<Stage> stages = stageRepository.findAValiderStagesByEcoleId(ecoleId);
+
+        // Map list of Stage entities to StageDTO
+        return stages.stream()
+                .map(stage -> new StageDTO(
+                        stage.getIdStage(), stage.getTitre(), stage.getDescription(),
+                        stage.getDateDebut(), stage.getDateFin(), stage.getDuree(),
+                        stage.getLocalisation(), stage.getMontantRemuneration(),
+                        stage.getStatut(), stage.getType(),
+                        stage.getEtudiant().getIdEtu(),
+                        stage.getOffre() != null ? stage.getOffre().getIdOffre() : null,
+                        stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null))
+                .toList();
+    }
+
+
+        @Override
+        public void setStatusAndDeleteRest(Long etudiantId, Long stageId) {
+            // Step 1: Get all stages associated with the student
+            List<Stage> stages = stageRepository.findByEtudiantIdEtu(etudiantId);
+
+            // Step 2: Find the stage with the given stageId and update its status
+            stages.stream()
+                    .filter(stage -> stage.getIdStage().equals(stageId))
+                    .findFirst()
+                    .ifPresent(stage -> {
+                        stage.setStatut("a valider");
+                        stageRepository.save(stage); // Save the status update
+                    });
+
+            // Step 3: Delete all other stages for the same student
+            stages.stream()
+                    .filter(stage -> !stage.getIdStage().equals(stageId))
+                    .forEach(stageRepository::delete);
+
+    }
+    @Override
+    public List<StageDTO> getStagesByEtudiantId(Long etudiantId) {
+        // Fetch stages by Etudiant ID
+        return stageRepository.findByEtudiantIdEtu(etudiantId).stream()
+                .map(mapper::toDto) // Convert entities to DTOs using EntityMapper
+                .collect(Collectors.toList());
     }
 }

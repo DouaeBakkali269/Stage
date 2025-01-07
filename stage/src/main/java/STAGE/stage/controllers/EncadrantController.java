@@ -74,4 +74,10 @@ public class EncadrantController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/by-entreprise/{entrepriseId}")
+    public ResponseEntity<List<EncadrantDTO>> getEncadrantsByEntrepriseId(@PathVariable Long entrepriseId) {
+        List<EncadrantDTO> encadrants = encadrantService.getEncadrantsByEntrepriseId(entrepriseId);
+        return ResponseEntity.ok(encadrants);
+    }
 }

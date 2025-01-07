@@ -3,6 +3,7 @@ package STAGE.stage.controllers;
 import STAGE.stage.dtos.StageDTO;
 import STAGE.stage.services.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,4 +54,34 @@ public class StageController {
     public void deleteStage(@PathVariable Long id) {
         stageService.deleteStage(id);
     }
+
+    @GetMapping("/cf/{idCF}/to-validate ")
+    public List<StageDTO> getStagesByCF(@PathVariable Long idCF) {
+        return stageService.getStagesByCF(idCF);
+    }
+
+    @GetMapping("/validated/ecole/{ecoleId}")
+    public ResponseEntity<List<StageDTO>> getValidatedStagesByEcoleId(@PathVariable Long ecoleId) {
+        List<StageDTO> validatedStages = stageService.getValidatedStagesByEcoleId(ecoleId);
+        return ResponseEntity.ok(validatedStages);
+    }
+
+    @GetMapping("/AValider/ecole/{ecoleId}")
+    public ResponseEntity<List<StageDTO>> getAValidertagesByEcoleId(@PathVariable Long ecoleId) {
+        List<StageDTO> validatedStages = stageService.getAValiderStagesByEcoleId(ecoleId);
+        return ResponseEntity.ok(validatedStages);
+    }
+
+    @PutMapping("/set-status-delete-others/{etudiantId}/{stageId}")
+    public ResponseEntity<String> setStatusAndDeleteRest(@PathVariable Long etudiantId, @PathVariable Long stageId) {
+        stageService.setStatusAndDeleteRest(etudiantId, stageId);
+        return ResponseEntity.ok("Stage status updated and unrelated stages deleted.");
+    }
+
+    @GetMapping("/by-etudiant/{etudiantId}")
+    public ResponseEntity<List<StageDTO>> getStagesByEtudiantId(@PathVariable Long etudiantId) {
+        List<StageDTO> stages = stageService.getStagesByEtudiantId(etudiantId);
+        return ResponseEntity.ok(stages);
+    }
+
 }

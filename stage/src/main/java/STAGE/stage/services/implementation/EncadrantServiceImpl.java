@@ -2,7 +2,9 @@ package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.EncadrantDTO;
 import STAGE.stage.mappers.EntityMapper;
+import STAGE.stage.models.Entreprise;
 import STAGE.stage.repositories.EncadrantRepository;
+import STAGE.stage.repositories.EntrepriseRepository;
 import STAGE.stage.repositories.UserRepository;
 import STAGE.stage.services.EncadrantService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class EncadrantServiceImpl implements EncadrantService {
     @Autowired
     private UserRepository userrepository;
     private final EntityMapper mapper;
+    @Autowired
+    private EntrepriseRepository entrepriseRepository;
 
     @Override
     public EncadrantDTO createEncadrant(EncadrantDTO dto) {
@@ -41,6 +45,9 @@ public class EncadrantServiceImpl implements EncadrantService {
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
         userrepository.save(user);
 
+        Entreprise entreprise = entrepriseRepository.findById(dto.getEntrepriseId())
+                .orElseThrow(() -> new RuntimeException("Entreprise not found with id: " + dto.getEntrepriseId()));
+
         Encadrant encadrant = new Encadrant();
         encadrant.setNom(dto.getNom());
         encadrant.setPrenom(dto.getPrenom());
@@ -48,6 +55,7 @@ public class EncadrantServiceImpl implements EncadrantService {
         encadrant.setTelephone(dto.getTelephone());
         encadrant.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
         encadrant.setUser(user); // Associate User
+        encadrant.setEntreprise(entreprise);
 
         return mapper.toDto(encadrantRepository.save(encadrant));
     }
@@ -106,5 +114,12 @@ public class EncadrantServiceImpl implements EncadrantService {
         } else {
             throw new IllegalArgumentException("Encadrant with userId " + userId + " does not exist.");
         }
+    }
+    @Override
+    public List<EncadrantDTO> getEncadrantsByEntrepriseId(Long entrepriseId) {
+        List<Encadrant> encadrants = encadrantRepository.findByEntrepriseIdEntreprise(entrepriseId);
+        return encadrants.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 }

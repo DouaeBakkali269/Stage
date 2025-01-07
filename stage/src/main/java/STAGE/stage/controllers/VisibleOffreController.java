@@ -1,8 +1,9 @@
 package STAGE.stage.controllers;
 
+import STAGE.stage.dtos.OffreDTO;
 import STAGE.stage.models.Offre;
 import STAGE.stage.services.FiliereService;
-import STAGE.stage.services.OffreService;
+import STAGE.stage.services.implementation.VisibleOffreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VisibleOffreController {
     private final FiliereService filiereService;
+    private final VisibleOffreService visibleOffreService;
 
 
     @PostMapping("/filiere/{filiereId}/offre/{offreId}/visibility")
@@ -26,8 +28,13 @@ public class VisibleOffreController {
     }
 
     @GetMapping("/{filiereId}/visible-offres")
-    public List<Offre> getVisibleOffresByFiliere(@PathVariable Long filiereId) {
+    public List<OffreDTO> getVisibleOffresByFiliere(@PathVariable Long filiereId) {
         return filiereService.getVisibleOffresByFiliere(filiereId);
     }
 
+    // DELETE Endpoint
+    @DeleteMapping("/{offreId}/{filiereId}")
+    public void deleteVisibleOffre(@PathVariable Long offreId, @PathVariable Long filiereId) {
+        visibleOffreService.deleteVisibleOffre(offreId, filiereId);
+    }
 }

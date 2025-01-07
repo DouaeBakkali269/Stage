@@ -12,4 +12,6 @@ public interface EncadrantService {
     void deleteEncadrant(Long id);
 
     Long getEncadrantIdByUserId(Long userId);
+
+    List<EncadrantDTO> getEncadrantsByEntrepriseId(Long entrepriseId);
 }

@@ -2,6 +2,8 @@ package STAGE.stage.repositories;
 
 import STAGE.stage.models.VisibleOffre;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +17,8 @@ public interface VisibleOffreRepository extends JpaRepository<VisibleOffre, Long
 
     // Find a specific VisibleOffre by Filiere ID and Offre ID
     Optional<VisibleOffre> findByFiliere_IdFiliereAndOffre_IdOffre(Long idFiliere, Long idOffre);
+
+    // Custom Query to Find VisibleOffre by OffreId and FiliereId
+    @Query("SELECT vo FROM VisibleOffre vo WHERE vo.offre.idOffre = :offreId AND vo.filiere.idFiliere = :filiereId")
+    Optional<VisibleOffre> findByOffreIdAndFiliereId(@Param("offreId") Long offreId, @Param("filiereId") Long filiereId);
 }

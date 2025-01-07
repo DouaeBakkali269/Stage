@@ -1,6 +1,7 @@
 package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.ChefDeFiliereDTO;
+import STAGE.stage.dtos.OffreDTO;
 import STAGE.stage.models.*;
 import STAGE.stage.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,13 @@ import STAGE.stage.services.FiliereService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 public class FiliereServiceImpl implements FiliereService {
 
     @Autowired
     private FiliereRepository filiereRepository;
-
     @Autowired
     private ChefDeFiliereRepository chefDeFiliereRepository;
     private EtudiantRepository etudiantRepository;
@@ -94,11 +95,12 @@ public class FiliereServiceImpl implements FiliereService {
     }
 
     @Override
-    public List<Offre> getVisibleOffresByFiliere(Long filiereId) {
+    public List<OffreDTO> getVisibleOffresByFiliere(Long filiereId) {
         // Find all visible offers for a given Filiere
         return visibleOffreRepository.findByFiliere_IdFiliere(filiereId).stream()
                 .filter(VisibleOffre::getVisible)
                 .map(VisibleOffre::getOffre)
+                .map(entityMapper::toDto)
                 .collect(Collectors.toList());
     }
     @Override

@@ -109,8 +109,11 @@ public class OffreServiceImpl implements OffreService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<Offre> getOffresByEntreprise(Long entrepriseId) {
-        return offreRepository.findOffersByCompanyId(entrepriseId); // Assurez-vous que la méthode existe dans le repository
+    public List<OffreDTO> getOffresByEntreprise(Long entrepriseId) {
+        List<Offre> offres =offreRepository.findOffersByCompanyId(entrepriseId); // Assurez-vous que la méthode existe dans le repository
+        return offres.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -122,7 +125,15 @@ public class OffreServiceImpl implements OffreService {
         // Deletes the offer by ID
         offreRepository.deleteById(id);
     }
+
+    @Override
+    public OffreDTO getOffreById(Long id) {
+        Offre offre = offreRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Offre not found with ID: " + id));
+        return mapper.toDto(offre);
+    }
 }
+
 
 
 

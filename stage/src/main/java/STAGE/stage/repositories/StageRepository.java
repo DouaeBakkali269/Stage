@@ -30,4 +30,18 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 
     @Query("SELECT COUNT(s) FROM Stage s WHERE s.encadrant.idEncadrant = :supervisorId")
     long countByEncadrantIdEncadrant(@Param("supervisorId") Long supervisorId);
+
+    List<Stage> findByEtudiantIdEtuInAndStatut(List<Long> etudiantIds, String status);
+
+
+    @Query("SELECT s FROM Stage s WHERE s.statut = 'valide' AND s.etudiant.idEtu IN " +
+                "(SELECT e.idEtu FROM Etudiant e WHERE e.ecole.idEcole = :ecoleId)")
+    List<Stage> findValidatedStagesByEcoleId(@Param("ecoleId") Long ecoleId);
+
+    @Query("SELECT s FROM Stage s WHERE s.statut = 'a valider' AND s.etudiant.idEtu IN " +
+            "(SELECT e.idEtu FROM Etudiant e WHERE e.ecole.idEcole = :ecoleId)")
+    List<Stage> findAValiderStagesByEcoleId(@Param("ecoleId") Long ecoleId);
+
+    List<Stage> findByEtudiantIdEtu(Long etudiantId);
+
 }
