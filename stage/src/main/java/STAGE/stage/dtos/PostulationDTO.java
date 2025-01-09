@@ -15,7 +15,7 @@ public class PostulationDTO {
     private Long offreId;
     private Long etudiantId;
     private String etatPostulation;
-    private byte[] Cv;
-    private byte[] LettreMotivation;
+    private byte[] cv;
+    private byte[] lettreMotivation;
 }
 

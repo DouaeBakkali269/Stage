@@ -21,7 +21,6 @@ public class CoordinateurDeStage {
     private String email;
     private String motDePasse;
     private String telephone;
-    private String role;
 
     @ManyToOne
     private Ecole ecole;

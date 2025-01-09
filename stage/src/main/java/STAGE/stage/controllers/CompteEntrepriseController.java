@@ -67,7 +67,7 @@ public class CompteEntrepriseController {
         return statisticsService.countTotalInterviewsByCompanyId(companyId);
     }
 
-    @GetMapping("/{companyId}/total-internships")
+    @GetMapping("/{companyId}/total-internships-confirmed")
     public long countTotalInternshipsByCompanyId(@PathVariable Long companyId) {
         return statisticsService.countTotalInternshipsByCompanyId(companyId);
     }
@@ -82,10 +82,21 @@ public class CompteEntrepriseController {
         return statisticsService.countSupervisorsByCompanyId(companyId);
     }
 
-    @GetMapping("/offers/{offerId}/applicants")
-    public long countApplicantsPerOffer(@PathVariable Long offerId) {
-        return statisticsService.countApplicantsPerOffer(offerId);
+    @GetMapping("/{entrepriseId}/total-internships")
+    public long countStagesByEntrepriseId(@PathVariable Long entrepriseId) {
+        return statisticsService.countStagesByEntrepriseId(entrepriseId);
     }
+    @GetMapping("/countByEntreprise/{entrepriseId}")
+    public ResponseEntity<Long> countPostulationsByEntreprise(@PathVariable Long entrepriseId) {
+        long count = statisticsService.countPostulationsByEntrepriseId(entrepriseId);
+        return ResponseEntity.ok(count);
+    }
+
+
+//    @GetMapping("/offers/{offerId}/applicants")
+//    public long countApplicantsPerOffer(@PathVariable Long offerId) {
+//        return statisticsService.countApplicantsPerOffer(offerId);
+//    }
 
     // Disable compte entreprise
     @PutMapping("/{id}/disable")

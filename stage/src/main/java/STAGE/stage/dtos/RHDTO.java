@@ -21,5 +21,4 @@ public class RHDTO {
     private Long entrepriseId;
     private List<Long> offreIds;
     private Long userId;
-
 }

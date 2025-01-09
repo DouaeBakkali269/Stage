@@ -3,8 +3,10 @@ package STAGE.stage.services.implementation;
 import STAGE.stage.dtos.CoordinateurDeStageDTO;
 import STAGE.stage.mappers.EntityMapper;
 import STAGE.stage.models.CoordinateurDeStage;
+import STAGE.stage.models.Ecole;
 import STAGE.stage.models.User;
 import STAGE.stage.repositories.CoordinateurDeStageRepository;
+import STAGE.stage.repositories.EcoleRepository;
 import STAGE.stage.repositories.UserRepository;
 import STAGE.stage.services.CoordinateurDeDStageService;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +28,18 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userrepository;
+
+    @Autowired
+    private EcoleRepository ecoleRepository;
+
     @Override
     public CoordinateurDeStageDTO createCoordinateurDeStage(CoordinateurDeStageDTO dto) {
         if (dto.getMotDePasse() == null || dto.getMotDePasse().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
+        Ecole ecole = ecoleRepository.findById(dto.getEcoleId())
+                .orElseThrow(() -> new RuntimeException("Ecole not found"));
+
 
         User user = new User();
         user.setRole("COORDINATEUR_DE_STAGE");
@@ -45,6 +54,7 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
         coordinateur.setTelephone(dto.getTelephone());
         coordinateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
         coordinateur.setUser(user); // Associate User
+        coordinateur.setEcole(ecole);
 
         return mapper.toDto(coordinateurDeStageRepository.save(coordinateur));
     }

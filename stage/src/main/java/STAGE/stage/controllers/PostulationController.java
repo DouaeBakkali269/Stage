@@ -1,5 +1,6 @@
 package STAGE.stage.controllers;
 
+import STAGE.stage.models.Postulation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import STAGE.stage.dtos.PostulationDTO;
 import STAGE.stage.services.PostulationService;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +51,39 @@ public class PostulationController {
         List<PostulationDTO> postulations = postulationService.getPostulationsByEtudiantId(etudiantId);
         return new ResponseEntity<>(postulations, HttpStatus.OK);
     }
+
+    @GetMapping("/download/{postulationId}/cv")
+    public ResponseEntity<Resource> downloadCv(@PathVariable Long postulationId) {
+        Postulation postulation = postulationService.getPostulationById(postulationId);
+        if (postulation == null) {
+            throw new RuntimeException("Postulation introuvable");
+        }
+
+        byte[] cvData = postulation.getCv();
+        ByteArrayResource resource = new ByteArrayResource(cvData);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=cv.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
+
+    @GetMapping("/download/{postulationId}/lettre-motivation")
+    public ResponseEntity<Resource> downloadLettreMotivation(@PathVariable Long postulationId) {
+        Postulation postulation =postulationService.getPostulationById(postulationId);
+        if (postulation == null) {
+            throw new RuntimeException("Postulation introuvable");
+        }
+
+        byte[] lettreData = postulation.getLettreMotivation();
+        ByteArrayResource resource = new ByteArrayResource(lettreData);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=lettre_motivation.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<PostulationDTO> createPostulationWithFiles(
             @RequestParam("offreId") Long offreId,

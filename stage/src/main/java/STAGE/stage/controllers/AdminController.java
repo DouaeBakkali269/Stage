@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,8 +79,26 @@ public class AdminController {
 
     @GetMapping("/stages/ongoing")
     public long countOngoingStages() {
-        return statisticsService.countOngoingStages(java.time.LocalDate.now());
+        LocalDate localDate = LocalDate.now();
+        Date date = DateConversionUtil.convertToDate(localDate);
+        return statisticsService.countOngoingStages(date);
     }
+
+    @GetMapping("/open-offers/count")
+    public long getTotalOpenOffers() {
+        return statisticsService.countTotalOpenOffers();
+    }
+
+    @GetMapping("/stages-offres")
+    public long countTotalInterns() {
+        return statisticsService.countTotalInterns();
+    }
+
+    @GetMapping("/count-platform-users")
+    public long countTotalPlatformUsers() {
+        return statisticsService.countTotalPlatformUsers();
+    }
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<Long> getAdminIdByUserId(@PathVariable Long userId) {

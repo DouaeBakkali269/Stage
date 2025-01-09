@@ -12,6 +12,9 @@ public interface VisibleOffreRepository extends JpaRepository<VisibleOffre, Long
     // Find all VisibleOffre entries by Filiere ID
     List<VisibleOffre> findByFiliere_IdFiliere(Long idFiliere);
 
+    @Query("SELECT COUNT(o.id) FROM VisibleOffre o WHERE o.visible = true AND o.filiere.idFiliere = :idFiliere")
+    long countVisibleOffersByFiliere(Long idFiliere);
+
     // Find all VisibleOffre entries by Offre ID
     List<VisibleOffre> findByOffre_IdOffre(Long idOffre);
 

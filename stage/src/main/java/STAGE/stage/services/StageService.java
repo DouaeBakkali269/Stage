@@ -1,6 +1,7 @@
 package STAGE.stage.services;
 
 import STAGE.stage.dtos.StageDTO;
+import STAGE.stage.models.Stage;
 import STAGE.stage.repositories.EtudiantRepository;
 import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.repositories.StageRepository;
@@ -27,4 +28,7 @@ public interface StageService {
     void setStatusAndDeleteRest(Long etudiantId, Long stageId);
 
     List<StageDTO> getStagesByEtudiantId(Long etudiantId);
+
+    //get stage by ecoleId
+    List<StageDTO> findStagesByEcoleId(Long ecoleId);
 }

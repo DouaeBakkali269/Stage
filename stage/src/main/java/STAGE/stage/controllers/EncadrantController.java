@@ -65,6 +65,11 @@ public class EncadrantController {
         return statisticsService.countTotalInternshipsBySupervisor(supervisorId);
     }
 
+    @GetMapping("/company/{companyId}/active-internships")
+    public long getActiveInternshipsByCompany(@PathVariable Long companyId) {
+        return statisticsService.countActiveInternshipsByCompanyId(companyId);
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<Long> getEncadrantIdByUserId(@PathVariable Long userId) {
         try {

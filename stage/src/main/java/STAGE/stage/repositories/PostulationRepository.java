@@ -16,6 +16,15 @@ public interface PostulationRepository extends JpaRepository<Postulation, Long> 
 
     @Query("SELECT COUNT(p) FROM Postulation p WHERE p.offre.idOffre = :offerId")
     long countByOffreIdOffre(@Param("offerId") Long offerId);
+
+    @Query("SELECT COUNT(p) FROM Postulation p WHERE p.etudiant.idEtu = :studentId")
+    long countApplicationsByStudentId(@Param("studentId") Long studentId);
+
+    @Query("SELECT COUNT(p.id) FROM Postulation p WHERE p.etudiant.idEtu = :idEtu")
+    long countPostulationsByEtudiantId(Long idEtu);
+
+    @Query("SELECT COUNT(p) FROM Postulation p WHERE p.offre.entreprise.idEntreprise = :entrepriseId")
+    long countPostulationsByEntrepriseId(@Param("entrepriseId") Long entrepriseId);
 }
 
 

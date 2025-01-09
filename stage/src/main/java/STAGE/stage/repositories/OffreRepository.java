@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OffreRepository extends JpaRepository<Offre, Long> {
@@ -23,4 +24,7 @@ public interface OffreRepository extends JpaRepository<Offre, Long> {
     long countVisibleOffersByFiliere(@Param("filiereId") Long filiereId);
 
     List<Offre> findByRh(RH rh);
+
+    @Query("SELECT COUNT(o) FROM Offre o WHERE o.dateLimite > :date")
+    long countOpenOffers(Date date);
 }

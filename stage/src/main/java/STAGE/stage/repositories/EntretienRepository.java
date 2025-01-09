@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.Date;
 
 import java.util.List;
 
@@ -19,5 +20,8 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
     long countByEntrepriseIdEntreprise(@Param("companyId") Long companyId);
 
     List<Entretien> findByEtudiantIdEtu(Long etudiantId);
+
+    @Query("SELECT COUNT(e.id) FROM Entretien e WHERE e.etudiant.idEtu = :idEtu AND e.dateEntretien > :currentDate")
+    long countUpcomingEntretiensByEtudiantId(Long idEtu, Date currentDate);
 
 }

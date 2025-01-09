@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-07T20:03:50+0100",
+    date = "2025-01-08T02:18:33+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -465,7 +465,6 @@ public class EntityMapperImpl implements EntityMapper {
         coordinateurDeStageDTO.setEmail( coordinateurDeStage.getEmail() );
         coordinateurDeStageDTO.setMotDePasse( coordinateurDeStage.getMotDePasse() );
         coordinateurDeStageDTO.setTelephone( coordinateurDeStage.getTelephone() );
-        coordinateurDeStageDTO.setRole( coordinateurDeStage.getRole() );
 
         return coordinateurDeStageDTO;
     }
@@ -486,7 +485,6 @@ public class EntityMapperImpl implements EntityMapper {
         coordinateurDeStage.setEmail( coordinateurDeStageDTO.getEmail() );
         coordinateurDeStage.setMotDePasse( coordinateurDeStageDTO.getMotDePasse() );
         coordinateurDeStage.setTelephone( coordinateurDeStageDTO.getTelephone() );
-        coordinateurDeStage.setRole( coordinateurDeStageDTO.getRole() );
 
         return coordinateurDeStage;
     }

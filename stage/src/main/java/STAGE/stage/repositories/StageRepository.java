@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -19,14 +20,8 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 
 
     // Count stages ending before a certain date (to compute ongoing internships)
-    long countByDateFinBefore(LocalDate currentDate);
+    long countByDateFinBefore(Date currentDate);
 
-    @Query("SELECT COUNT(s) FROM Stage s WHERE s.offre.entreprise.idEntreprise = :companyId")
-    long countByEntrepriseIdEntreprise(@Param("companyId") Long companyId);
-
-
-    @Query("SELECT COUNT(s) FROM Stage s WHERE s.encadrant.idEncadrant = :supervisorId AND s.dateFin > :currentDate")
-    long countByEncadrantIdEncadrantAndDateFinBefore(@Param("supervisorId") Long supervisorId, @Param("currentDate") LocalDate currentDate);
 
     @Query("SELECT COUNT(s) FROM Stage s WHERE s.encadrant.idEncadrant = :supervisorId")
     long countByEncadrantIdEncadrant(@Param("supervisorId") Long supervisorId);
@@ -35,7 +30,7 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 
 
     @Query("SELECT s FROM Stage s WHERE s.statut = 'valide' AND s.etudiant.idEtu IN " +
-                "(SELECT e.idEtu FROM Etudiant e WHERE e.ecole.idEcole = :ecoleId)")
+            "(SELECT e.idEtu FROM Etudiant e WHERE e.ecole.idEcole = :ecoleId)")
     List<Stage> findValidatedStagesByEcoleId(@Param("ecoleId") Long ecoleId);
 
     @Query("SELECT s FROM Stage s WHERE s.statut = 'a valider' AND s.etudiant.idEtu IN " +
@@ -43,5 +38,64 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
     List<Stage> findAValiderStagesByEcoleId(@Param("ecoleId") Long ecoleId);
 
     List<Stage> findByEtudiantIdEtu(Long etudiantId);
+
+
+    @Query("SELECT COUNT(s) FROM Stage s WHERE s.offre.entreprise.idEntreprise = :companyId AND s.statut IN ('valide', 'en cours', 'évalué' , 'terminé')")
+    long countValidInternshipsByCompanyId(@Param("companyId") Long companyId);
+
+    @Query("SELECT COUNT(s) FROM Stage s WHERE s.offre.entreprise.idEntreprise = :companyId AND s.statut = 'en cours'")
+    long countActiveInternshipsByCompanyId(@Param("companyId") Long companyId);
+
+    @Query("SELECT s FROM Stage s WHERE s.etudiant.filiere.idFiliere = :filiereId")
+    List<Stage> findInternshipsByFiliereId(@Param("filiereId") Long filiereId);
+
+    //get stage by ecoleId
+    @Query("SELECT s FROM Stage s WHERE s.etudiant.ecole.idEcole = :ecoleId")
+    List<Stage> findStagesByEcoleId(@Param("ecoleId") Long ecoleId);
+
+    //Select internships offers
+    @Query("SELECT COUNT(s.id) FROM Stage s")
+    long countTotalInterns();
+
+    // count dtudents with internships by filiere
+    @Query("SELECT COUNT(s.idStage) " +
+            "FROM Stage s " +
+            "WHERE s.statut IN ('valide', 'en cours', 'terminé') " +
+            "AND s.etudiant.idEtu IN (" +
+            "    SELECT e.idEtu " +
+            "    FROM Etudiant e " +
+            "    WHERE e.filiere.idFiliere = :filiereId" +
+            ")")
+    long countStudentsWithInternshipByFiliere(Long filiereId);
+
+    // Count all internships found for filiereId
+    @Query("SELECT COUNT(s.idStage) " +
+            "FROM Stage s " +
+            "WHERE s.etudiant.idEtu IN (" +
+            "    SELECT e.idEtu " +
+            "    FROM Etudiant e " +
+            "    WHERE e.filiere.idFiliere = :filiereId" +
+            ")")
+    long countWithInternshipFoundByFiliere(Long filiereId);
+
+    @Query("SELECT COUNT(e.idEtu) " +
+            "FROM Etudiant e " +
+            "WHERE e.ecole.idEcole = :idEcole " +
+            "AND e.id NOT IN (" +
+            "    SELECT s.etudiant.idEtu " +
+            "    FROM Stage s" +
+            ")")
+    long countStudentsWithoutInternship(Long idEcole);
+
+
+    @Query("SELECT COUNT(s.idStage) FROM Stage s WHERE s.offre.entreprise.idEntreprise = :entrepriseId")
+    long countAllByEntrepriseId(Long entrepriseId);
+
+    // count stage spar etudiant
+    @Query("SELECT COUNT(s.idStage) FROM Stage s WHERE s.etudiant.idEtu = :idEtu")
+    long countInternshipsByEtudiantId(Long idEtu);
+
+    @Query("SELECT COUNT(i) FROM Stage i WHERE i.encadrant.idEncadrant = :supervisorId AND i.statut = 'en cours'")
+    long countOngoingInternshipsBySupervisor(@Param("supervisorId") Long supervisorId);
 
 }

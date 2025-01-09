@@ -83,9 +83,15 @@ public class CompteEcoleController {
         return statisticsService.countStudentsWithoutInternship(idEcole);
     }
 
-    @GetMapping("/{idEcole}/students-with-internship/{filiereId}")
-    public long countStudentsWithInternshipByFiliere(@PathVariable Long filiereId, @PathVariable Long idEcole) {
-        return statisticsService.countStudentsWithInternshipByFiliere(filiereId, idEcole);
+
+    @GetMapping("/students-with-internship/{filiereId}")
+    public long countStudentsWithInternshipByFiliere(@PathVariable Long filiereId) {
+        return statisticsService.countStudentsWithInternshipByFiliere(filiereId);
+    }
+
+    @GetMapping("/found-internship/{filiereId}")
+    public long countInternshipFoundByFiliere(@PathVariable Long filiereId) {
+        return statisticsService.countStudentsWithInternshipByFiliere(filiereId);
     }
 
     @GetMapping("/{filiereId}/total-students")
@@ -97,6 +103,15 @@ public class CompteEcoleController {
     public long countVisibleOffersByFiliere(@PathVariable Long filiereId) {
         return statisticsService.countVisibleOffersByFiliere(filiereId);
     }
+
+    @GetMapping("/internship-percentage/{filiereId}")
+    public double getInternshipPercentage(@PathVariable Long filiereId
+    ) {
+        return statisticsService.getInternshipPercentageByFiliere(filiereId);
+    }
+
+
+    // Disable CompteEcole
     @PutMapping("/{id}/disable")
     public ResponseEntity<String> disableCompteEcole(@PathVariable Long id, @RequestBody String newPassword) {
         try {

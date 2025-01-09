@@ -1,5 +1,7 @@
 package STAGE.stage.controllers;
 
+import STAGE.stage.repositories.VisibleOffreRepository;
+import STAGE.stage.services.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,12 @@ public class EtudiantController {
 
     @Autowired
     private  EtudiantService etudiantService;
+
+    @Autowired
+    private StatisticsService statisticsService;
+
+    @Autowired
+    private VisibleOffreRepository visibleOffreRepository;
 
     // Créer un étudiant
     @PostMapping
@@ -114,7 +122,31 @@ public class EtudiantController {
         }
     }
 
+    @GetMapping("/student/{studentId}/count-applications")
+    public long countApplicationsByStudent(@PathVariable Long studentId) {
+        return statisticsService.countApplicationsByStudentId(studentId);
+    }
+    @GetMapping("/student/{studentId}/count-interviews")
+    public long countInterviewsByStudent(@PathVariable Long studentId) {
+        return statisticsService.countInterviewsByStudentId(studentId);
+    }
 
+    // Endpoint to count postulations by student ID
+    @GetMapping("/{idEtu}/postulations/count")
+    public long countPostulationsByEtudiantId(@PathVariable Long idEtu) {
+        return statisticsService.countPostulationsByEtudiantId(idEtu);
+    }
+
+    // Endpoint to count internships by student ID
+    @GetMapping("/{idEtu}/internships/count")
+    public long countInternshipsByEtudiantId(@PathVariable Long idEtu) {
+        return statisticsService.countInternshipsByEtudiantId(idEtu);
+    }
+
+    @GetMapping("/{idFiliere}/visible/count")
+    public long countVisibleOffersByFiliere(@PathVariable Long idFiliere) {
+        return visibleOffreRepository.countVisibleOffersByFiliere(idFiliere);
+    }
 
 }
 

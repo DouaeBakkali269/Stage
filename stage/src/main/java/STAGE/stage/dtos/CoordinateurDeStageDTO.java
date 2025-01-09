@@ -16,9 +16,7 @@ public class CoordinateurDeStageDTO {
     private String email;
     private String motDePasse;
     private String telephone;
-    private String role;
     private Long ecoleId;
     private Long userId;
-
 }
 

@@ -84,5 +84,15 @@ public class PostulationServiceImpl implements PostulationService {
         }
         postulationRepository.deleteById(id);
     }
+
+    @Override
+    public Postulation getPostulationById(Long postulationId) {
+        // Retrieve the postulation by ID
+        Postulation postulation = postulationRepository.findById(postulationId)
+                .orElseThrow(() -> new RuntimeException("Postulation introuvable avec l'ID : " + postulationId));
+
+        // Map the retrieved entity to a DTO and return
+        return postulation;
+    }
 }
 

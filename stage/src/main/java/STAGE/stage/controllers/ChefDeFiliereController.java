@@ -1,7 +1,9 @@
 package STAGE.stage.controllers;
 
 import STAGE.stage.dtos.ChefDeFiliereDTO;
+import STAGE.stage.models.Stage;
 import STAGE.stage.services.ChefDeFiliereService;
+import STAGE.stage.services.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ public class ChefDeFiliereController {
 
     @Autowired
     private ChefDeFiliereService chefDeFiliereService;
+
+    @Autowired
+    private StatisticsService statisticsService;
 
     /**
      * Create a new ChefDeFiliere
@@ -83,5 +88,10 @@ public class ChefDeFiliereController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/filiere/{filiereId}/internships")
+    public List<Stage> findInternshipsByFiliereId(@PathVariable Long filiereId) {
+        return statisticsService.findInternshipsByFiliereId(filiereId);
     }
 }

@@ -84,4 +84,10 @@ public class StageController {
         return ResponseEntity.ok(stages);
     }
 
+    // get stages by ecoleId
+    @GetMapping("/by-ecole/{ecoleId}")
+    public List<StageDTO> getStagesByEcoleId(@PathVariable Long ecoleId) {
+        return stageService.findStagesByEcoleId(ecoleId);
+    }
+
 }

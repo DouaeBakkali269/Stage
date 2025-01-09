@@ -249,4 +249,12 @@ public class StageServiceImpl implements StageService {
                 .map(mapper::toDto) // Convert entities to DTOs using EntityMapper
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<StageDTO> findStagesByEcoleId(Long ecoleId) {
+        List<Stage> stages = stageRepository.findStagesByEcoleId(ecoleId);
+        return stages.stream()
+                .map(mapper::toDto) // Convert entities to DTOs using EntityMapper
+                .collect(Collectors.toList());
+    }
 }

@@ -21,5 +21,4 @@ public class EncadrantDTO {
     private Long entrepriseId;
     private List<Long> stageIds;
     private Long userId;
-
 }

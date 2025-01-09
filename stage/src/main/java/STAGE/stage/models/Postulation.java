@@ -17,9 +17,9 @@ public class Postulation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
-    private byte[] Cv;
+    private byte[] cv;
     @Lob
-    private byte[] LettreMotivation;
+    private byte[] lettreMotivation;
     private String etatPostulation;
 
 
