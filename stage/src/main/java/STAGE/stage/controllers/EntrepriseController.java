@@ -61,6 +61,9 @@ public class EntrepriseController {
                 .orElseThrow(() -> new RuntimeException("Entreprise non trouvée"));
 
         byte[] logoData = entreprise.getLogo();
+        if (logoData == null) {
+            return ResponseEntity.notFound().build();
+        }
         ByteArrayResource resource = new ByteArrayResource(logoData);
 
         return ResponseEntity.ok()

@@ -88,6 +88,9 @@ public class EcoleController {
                     .orElseThrow(() -> new RuntimeException("Ecole non trouvée"));
 
             byte[] logoData = ecole.getLogo();
+            if (logoData == null) {
+                return ResponseEntity.noContent().build();
+            }
             ByteArrayResource resource = new ByteArrayResource(logoData);
 
             return ResponseEntity.ok()
