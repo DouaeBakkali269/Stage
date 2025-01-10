@@ -9,6 +9,8 @@ import STAGE.stage.mappers.EntityMapper;
 import STAGE.stage.models.Admin;
 import STAGE.stage.repositories.AdminRepository;
 import STAGE.stage.services.AdminService;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -31,6 +33,9 @@ public class AdminServiceImpl implements AdminService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     @Override
@@ -80,5 +85,24 @@ public class AdminServiceImpl implements AdminService {
             throw new IllegalArgumentException("Admin with userId " + userId + " does not exist.");
         }
     }
+
+    @Override
+    public void sendEmailWithPassword(String email, String rawPassword) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Your Account Password");
+        message.setText("Your account has been created. Your password is: " + rawPassword);
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendEmail(String nom, String email, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("bakkalidouae75@gmail.com");
+        message.setSubject("StageConnect inquiry from contact section");
+        message.setText("Je suis "+nom+"\nMon email est: "+ email+"\n"+ text);
+        mailSender.send(message);
+    }
+
 
 }

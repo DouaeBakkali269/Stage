@@ -109,4 +109,14 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @PostMapping("/send-password/{email}/{rawPassword}")
+    public void sendPassword(@PathVariable String email, @PathVariable String rawPassword) {
+        adminService.sendEmailWithPassword(email, rawPassword);
+    }
+
+    @PostMapping("/send/{nom}/{email}/{text}")
+    public void sendEmail(@PathVariable String nom, @PathVariable String email, @PathVariable String text) {
+        adminService.sendEmail(nom,email,text);
+    }
 }

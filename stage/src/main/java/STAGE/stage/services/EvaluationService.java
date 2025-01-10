@@ -1,6 +1,7 @@
 package STAGE.stage.services;
 
 import STAGE.stage.dtos.EvaluationDTO;
+import STAGE.stage.models.Evaluation;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface EvaluationService {
     List<EvaluationDTO> getEvaluationsByEncadrantId(Long encadrantId); // Optional filtering
     List<EvaluationDTO> getEvaluationsByStageId(Long stageId);
     List<EvaluationDTO> getEvaluationsByEtudiantId(Long etudiantId);
+
+    List<EvaluationDTO> getEvaluationsByEcoleId(Long ecoleId);
 }

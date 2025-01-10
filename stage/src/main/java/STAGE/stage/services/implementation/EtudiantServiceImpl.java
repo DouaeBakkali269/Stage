@@ -113,6 +113,17 @@ public class EtudiantServiceImpl implements EtudiantService {
                 .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
         Filiere filiere = filiereRepository.findById(studentData.getFiliereId())
                 .orElseThrow(() -> new IllegalArgumentException("Filiere not found with ID: " + studentData.getFiliereId()));
+
+        // Update User (email and password) if needed
+        if (studentData.getUserId() != null) {
+            User user = userrepository.findById(studentData.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + studentData.getUserId()));
+            user.setEmail(studentData.getEmail()); // Update email
+            if (studentData.getMotDePasse() != null && !studentData.getMotDePasse().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(studentData.getMotDePasse())); // Update password
+            }
+            userrepository.save(user); // Save updated User
+        }
         // Update fields
         existingEtudiant.setNom(studentData.getNom());
         existingEtudiant.setPrenom(studentData.getPrenom());

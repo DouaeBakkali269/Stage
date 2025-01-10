@@ -1,14 +1,28 @@
 package STAGE.stage.controllers;
 
+import STAGE.stage.mappers.EntityMapper;
+import STAGE.stage.models.Ecole;
+import STAGE.stage.models.Etudiant;
+import STAGE.stage.models.Filiere;
+import STAGE.stage.models.Postulation;
+import STAGE.stage.repositories.EcoleRepository;
+import STAGE.stage.repositories.EtudiantRepository;
+import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.repositories.VisibleOffreRepository;
 import STAGE.stage.services.StatisticsService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import STAGE.stage.dtos.EtudiantDTO;
 import STAGE.stage.services.EtudiantService;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+
 
 import java.io.IOException;
 import java.util.List;
@@ -19,13 +33,19 @@ import java.util.List;
 public class EtudiantController {
 
     @Autowired
-    private  EtudiantService etudiantService;
+    private EtudiantService etudiantService;
 
     @Autowired
     private StatisticsService statisticsService;
 
     @Autowired
     private VisibleOffreRepository visibleOffreRepository;
+
+    @Autowired
+    private  EtudiantRepository etudiantRepository;
+    @Autowired
+    private EntityMapper entityMapper;
+
 
     // Créer un étudiant
     @PostMapping
@@ -56,38 +76,59 @@ public class EtudiantController {
     }
 
     // Créer un étudiant avec image
-    @PostMapping("/upload")
-    public ResponseEntity<EtudiantDTO> createEtudiantWithImage(
-            @RequestParam("nom") String nom,
-            @RequestParam("prenom") String prenom,
-            @RequestParam("tel") String tel,
-            @RequestParam("email") String email,
-            @RequestParam("motDePasse") String motDePasse,
-            @RequestParam("codeEtu") String codeEtu,
+    @PutMapping("/upload/{idEtu}")
+    public ResponseEntity<EtudiantDTO> updateEtudiantWithImage(
+            @PathVariable("idEtu") Long idEtu,
             @RequestParam("photoProfil") MultipartFile photoProfil,
-            @RequestParam("photoCouverture") MultipartFile photoCouverture,
-            @RequestParam("statutEtudiant") String statutEtudiant,
-            @RequestParam("ecoleId") Long ecoleId,
-            @RequestParam("filiereId") Long filiereId) {
+            @RequestParam("photoCouverture") MultipartFile photoCouverture){
         try {
-            EtudiantDTO etudiantDTO = new EtudiantDTO();
-            etudiantDTO.setNom(nom);
-            etudiantDTO.setPrenom(prenom);
-            etudiantDTO.setTel(tel);
-            etudiantDTO.setEmail(email);
-            etudiantDTO.setMotDePasse(motDePasse);
-            etudiantDTO.setCodeEtu(codeEtu);
-            etudiantDTO.setPhotoProfil(photoProfil.getBytes());
-            etudiantDTO.setPhotoCouverture(photoCouverture.getBytes());
-            etudiantDTO.setStatutEtudiant(statutEtudiant);
-            etudiantDTO.setEcoleId(ecoleId);
-            etudiantDTO.setFiliereId(filiereId);
 
-            EtudiantDTO createdEtudiant = etudiantService.createEtudiant(etudiantDTO);
-            return new ResponseEntity<>(createdEtudiant, HttpStatus.CREATED);
+            Etudiant etudiant = etudiantRepository.findById(idEtu)
+                    .orElseThrow(() -> new RuntimeException("Etudiant non trouvé"));
+
+            etudiant.setPhotoProfil(photoProfil.getBytes());
+            etudiant.setPhotoCouverture(photoCouverture.getBytes());
+
+            EtudiantDTO dto=entityMapper.toDto(etudiantRepository.save(etudiant));
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    // Endpoint to download photoProfil
+    @GetMapping("/download/{etudiantId}/photo-profil")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadPhotoProfil(@PathVariable Long etudiantId) {
+        EtudiantDTO etudiant = etudiantService.getEtudiantById(etudiantId);
+        if (etudiant == null || etudiant.getPhotoProfil() == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        byte[] photoProfilData = etudiant.getPhotoProfil();
+        ByteArrayResource resource = new ByteArrayResource(photoProfilData);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=photo_profil.jpg")
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
+    }
+
+    // Endpoint to download photoCouverture
+    @GetMapping("/download/{etudiantId}/photo-couverture")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadPhotoCouverture(@PathVariable Long etudiantId) {
+        EtudiantDTO etudiant = etudiantService.getEtudiantById(etudiantId);
+        if (etudiant == null || etudiant.getPhotoCouverture() == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        byte[] photoCouvertureData = etudiant.getPhotoCouverture();
+        ByteArrayResource resource = new ByteArrayResource(photoCouvertureData);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=photo_couverture.jpg")
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
     }
 
     @DeleteMapping("/{id}")
@@ -109,6 +150,7 @@ public class EtudiantController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
     // Update an existing student by ID
     @PutMapping("/{id}")
     public ResponseEntity<EtudiantDTO> updateEtudiant(
@@ -126,6 +168,7 @@ public class EtudiantController {
     public long countApplicationsByStudent(@PathVariable Long studentId) {
         return statisticsService.countApplicationsByStudentId(studentId);
     }
+
     @GetMapping("/student/{studentId}/count-interviews")
     public long countInterviewsByStudent(@PathVariable Long studentId) {
         return statisticsService.countInterviewsByStudentId(studentId);
@@ -147,7 +190,6 @@ public class EtudiantController {
     public long countVisibleOffersByFiliere(@PathVariable Long idFiliere) {
         return visibleOffreRepository.countVisibleOffersByFiliere(idFiliere);
     }
-
 }
 
 

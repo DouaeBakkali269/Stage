@@ -52,4 +52,8 @@ public class EvaluationController {
     public List<EvaluationDTO> getEvaluationsByEtudiantId(@PathVariable Long etudiantId) {
         return evaluationService.getEvaluationsByEtudiantId(etudiantId);
     }
+    @GetMapping("/by-ecole/{ecoleId}")
+    public List<EvaluationDTO> getEvaluationsByEcoleId(@PathVariable Long ecoleId) {
+        return evaluationService.getEvaluationsByEcoleId(ecoleId);
+    }
 }

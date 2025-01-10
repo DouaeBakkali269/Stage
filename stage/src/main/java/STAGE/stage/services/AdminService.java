@@ -12,6 +12,10 @@ public interface AdminService {
     void deleteById(Long id);
 
     Long getAdminIdByUserId(Long userId);
+
+    void sendEmailWithPassword(String email, String rawPassword);
+
+    void sendEmail(String nom, String email, String text);
 }
 
 

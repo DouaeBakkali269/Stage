@@ -82,6 +82,7 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
         chef.setEmail(dto.getEmail());
         chef.setTelephone(dto.getTelephone());
         chef.setMotDePasse(dto.getMotDePasse());
+
         chef.setFiliere(filiere);
         chef.setEcole(ecole);
 

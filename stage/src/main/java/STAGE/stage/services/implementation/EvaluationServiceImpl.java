@@ -91,4 +91,11 @@ public class EvaluationServiceImpl implements EvaluationService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+     @Override
+     public List<EvaluationDTO> getEvaluationsByEcoleId(Long ecoleId) {
+         return evaluationRepository.findByEcoleId(ecoleId).stream()
+                 .map(mapper::toDto)
+                 .collect(Collectors.toList());
+     }
+
 }
