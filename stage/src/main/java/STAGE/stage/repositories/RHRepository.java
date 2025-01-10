@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface RHRepository extends JpaRepository<RH, Long> {
     List<RH> findByEntrepriseIdEntreprise(Long entrepriseId);
-    @Query("SELECT COUNT(s) FROM Stage s WHERE s.offre.entreprise.idEntreprise = :companyId")
+
+    @Query("SELECT COUNT(s) FROM RH s WHERE s.entreprise.idEntreprise = :companyId")
     long countByEntrepriseIdEntreprise(@Param("companyId") Long companyId);
 
     Optional<RH> findByUserId(Long userId);

@@ -19,6 +19,7 @@ public class EntrepriseDTO {
     private String adresseEntreprise;
     private String telephoneFix;
     private String domaineEntreprise;
+    private byte[] logo;
     private List<Long> rhIds;
     private List<Long> encadrantIds;
     private List<Long> offreIds;

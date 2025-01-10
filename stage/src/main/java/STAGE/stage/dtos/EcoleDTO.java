@@ -15,6 +15,7 @@ public class EcoleDTO {
     private String villeEcole;
     private String adresseEcole;
     private String description;
+    private byte[] logo;
     private String telephoneFix;
     private String typeEcole;
     private String domaineEcole;

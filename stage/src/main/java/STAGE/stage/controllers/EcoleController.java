@@ -1,13 +1,22 @@
 package STAGE.stage.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import STAGE.stage.dtos.EcoleDTO;
-import STAGE.stage.models.Filiere;
-import STAGE.stage.services.EcoleService;
+import STAGE.stage.repositories.EcoleRepository;
+import STAGE.stage.mappers.EntityMapper;
 
+import STAGE.stage.models.*;
+import STAGE.stage.services.EcoleService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,6 +25,10 @@ import java.util.List;
 public class EcoleController {
 
     private final EcoleService ecoleService;
+    @Autowired
+    private EcoleRepository ecoleRepository;
+    @Autowired
+    private EntityMapper entityMapper;
 
     @PostMapping
     public ResponseEntity<EcoleDTO> createEcole(@RequestBody EcoleDTO ecoleDTO) {
@@ -66,4 +79,42 @@ public class EcoleController {
         EcoleDTO updatedEcole = ecoleService.updateFiliereInEcole(ecoleId, filiereId, newFiliere);
         return new ResponseEntity<>(updatedEcole, HttpStatus.OK);
     }
+
+    // Endpoint to download photoProfil
+    @GetMapping("/download/{ecoleId}/logo")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadPhotoProfil(@PathVariable Long ecoleId) {
+
+            Ecole ecole = ecoleRepository.findById(ecoleId)
+                    .orElseThrow(() -> new RuntimeException("Ecole non trouvée"));
+
+            byte[] logoData = ecole.getLogo();
+            ByteArrayResource resource = new ByteArrayResource(logoData);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=photo_profil.jpg")
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+    }
+
+    // Créer un étudiant avec image
+    @PutMapping("/upload/{idEcole}")
+    public ResponseEntity<EcoleDTO> updateEtudiantWithImage(
+            @PathVariable("idEtu") Long idEcole,
+            @RequestParam("logo") MultipartFile logo){
+        try {
+
+            Ecole ecole = ecoleRepository.findById(idEcole)
+                    .orElseThrow(() -> new RuntimeException("Ecole non trouvée"));
+
+            ecole.setLogo(logo.getBytes());
+
+
+            EcoleDTO dto=entityMapper.toDto(ecoleRepository.save(ecole));
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

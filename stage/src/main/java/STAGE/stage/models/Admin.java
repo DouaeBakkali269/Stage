@@ -24,5 +24,5 @@ public class Admin {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id") // Explicitly mapping foreign key
-    private User user;
+    private Utilisateur user;
 }

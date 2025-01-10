@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import STAGE.stage.models.Encadrant;
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class EncadrantServiceImpl implements EncadrantService {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("ENCADRANT");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -70,7 +70,7 @@ public class EncadrantServiceImpl implements EncadrantService {
         existing.setTelephone(dto.getTelephone());
         // Update User (email and password) if needed
         if (dto.getUserId() != null) {
-            User user = userrepository.findById(dto.getUserId())
+            Utilisateur user = userrepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
             user.setEmail(dto.getEmail()); // Update email
             if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {

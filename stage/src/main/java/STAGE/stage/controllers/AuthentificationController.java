@@ -1,6 +1,6 @@
 package STAGE.stage.controllers;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.*;
 import STAGE.stage.payloadRequest.LoginRequest;
 import STAGE.stage.payloadRequest.SignupRequest;
@@ -71,7 +71,7 @@ public class AuthentificationController {
             }
 
             // Create new user's account
-            User user = new User();
+            Utilisateur user = new Utilisateur();
             user.setPassword(encoder.encode(signUpRequest.getPassword()));
             user.setRole(signUpRequest.getRole());
             user.setEmail(signUpRequest.getEmail());

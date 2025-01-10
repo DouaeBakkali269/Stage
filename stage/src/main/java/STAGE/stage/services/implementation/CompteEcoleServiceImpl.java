@@ -1,6 +1,6 @@
 package STAGE.stage.services.implementation;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("ECOLE");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -66,7 +66,7 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
 
         // Update User (email and password) if needed
         if (dto.getUserId() != null) {
-            User user = userrepository.findById(dto.getUserId())
+            Utilisateur user = userrepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
             user.setEmail(dto.getEmail()); // Update email
             if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
@@ -124,7 +124,7 @@ public class CompteEcoleServiceImpl implements CompteEcoleService {
 
         // Fetch and update the User table via userId
         Long userId = compte.getUser().getId(); // Assuming CompteEcole has a field `userId`
-        User user = userrepository.findById(userId)
+        Utilisateur user = userrepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " does not exist."));
 
         user.setPassword(hashedPassword); // Update user's password as well

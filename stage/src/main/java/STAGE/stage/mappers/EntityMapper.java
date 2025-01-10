@@ -15,10 +15,8 @@ public interface EntityMapper {
 
     // Filiere Mapping
     @Mapping(source = "ecole.idEcole", target = "ecoleId")
-    @Mapping(source = "chefDeFiliere.idCf", target = "chefDeFiliereId")
     FiliereDTO toDto(Filiere filiere);
     @Mapping(source = "ecoleId", target = "ecole.idEcole")
-    @Mapping(source = "chefDeFiliereId", target = "chefDeFiliere.idCf")
     Filiere toEntity(FiliereDTO filiereDTO);
 
     // Ecole Mapping

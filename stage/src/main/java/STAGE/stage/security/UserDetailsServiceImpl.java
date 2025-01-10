@@ -3,7 +3,7 @@ package STAGE.stage.security;
 
 import STAGE.stage.exception.UserNotFoundException;
 import STAGE.stage.repositories.UserRepository;
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        Utilisateur user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User Not Found with email: " + email);
         }

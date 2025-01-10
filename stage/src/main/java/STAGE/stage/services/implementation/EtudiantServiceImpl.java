@@ -1,6 +1,6 @@
 package STAGE.stage.services.implementation;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class EtudiantServiceImpl implements EtudiantService {
                 .orElseThrow(() -> new RuntimeException("Filière introuvable"));
 
         // Créer un étudiant
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("ETUDIANT");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -116,7 +116,7 @@ public class EtudiantServiceImpl implements EtudiantService {
 
         // Update User (email and password) if needed
         if (studentData.getUserId() != null) {
-            User user = userrepository.findById(studentData.getUserId())
+            Utilisateur user = userrepository.findById(studentData.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + studentData.getUserId()));
             user.setEmail(studentData.getEmail()); // Update email
             if (studentData.getMotDePasse() != null && !studentData.getMotDePasse().isEmpty()) {

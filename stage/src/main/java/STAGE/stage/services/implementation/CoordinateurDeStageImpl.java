@@ -4,7 +4,7 @@ import STAGE.stage.dtos.CoordinateurDeStageDTO;
 import STAGE.stage.mappers.EntityMapper;
 import STAGE.stage.models.CoordinateurDeStage;
 import STAGE.stage.models.Ecole;
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.CoordinateurDeStageRepository;
 import STAGE.stage.repositories.EcoleRepository;
 import STAGE.stage.repositories.UserRepository;
@@ -41,7 +41,7 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
                 .orElseThrow(() -> new RuntimeException("Ecole not found"));
 
 
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("COORDINATEUR_DE_STAGE");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -71,7 +71,7 @@ public class CoordinateurDeStageImpl implements CoordinateurDeDStageService {
 
         // Update User (email and password) if needed
         if (dto.getUserId() != null) {
-            User user = userrepository.findById(dto.getUserId())
+            Utilisateur user = userrepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
             user.setEmail(dto.getEmail()); // Update email
             if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {

@@ -1,6 +1,6 @@
 package STAGE.stage.services.implementation;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class RHServiceImpl implements RHService {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("RH");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -85,7 +85,7 @@ public class RHServiceImpl implements RHService {
 
         // Update User (email and password) if needed
         if (rhDTO.getUserId() != null) {
-            User user = userrepository.findById(rhDTO.getUserId())
+            Utilisateur user = userrepository.findById(rhDTO.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + rhDTO.getUserId()));
             user.setEmail(rhDTO.getEmail()); // Update email
             if (rhDTO.getMotDePasse() != null && !rhDTO.getMotDePasse().isEmpty()) {

@@ -1,6 +1,6 @@
 package STAGE.stage.services.implementation;
 
-import STAGE.stage.models.User;
+import STAGE.stage.models.Utilisateur;
 import STAGE.stage.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminDTO save(AdminDTO adminDTO) {
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setEmail(adminDTO.getEmailAd());
         String encodedPassword = passwordEncoder.encode(adminDTO.getMotDePasse());
         user.setPassword(encodedPassword); // Hash the password before saving
@@ -48,6 +48,7 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = new Admin();
         admin.setNomAd(adminDTO.getNomAd());
         admin.setMotDePasse(encodedPassword);
+        admin.setEmailAd(adminDTO.getEmailAd());
         admin.setPrenomAd(adminDTO.getPrenomAd());
         admin.setTelephone(adminDTO.getTelephone());
         admin.setUser(user); // Link User to Admin

@@ -36,7 +36,7 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = new User();
+        Utilisateur user = new Utilisateur();
         user.setRole("CHEF_DE_FILIERE");
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getMotDePasse()));
@@ -68,7 +68,7 @@ public class ChefDeFiliereServiceImpl implements ChefDeFiliereService {
 
         // Update User (email and password) if needed
         if (dto.getUserId() != null) {
-            User user = userrepository.findById(dto.getUserId())
+            Utilisateur user = userrepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
             user.setEmail(dto.getEmail()); // Update email
             if (dto.getMotDePasse() != null && !dto.getMotDePasse().isEmpty()) {
