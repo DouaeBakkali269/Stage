@@ -20,6 +20,7 @@ public class Entreprise {
     private Long idEntreprise;
     private String nomEntreprise;
     private String description;
+    @Lob
     private byte[] logo;
     private String villeEntreprise;
     private String adresseEntreprise;

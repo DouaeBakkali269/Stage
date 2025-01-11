@@ -101,8 +101,8 @@ public class EcoleController {
 
     // Créer un étudiant avec image
     @PutMapping("/upload/{idEcole}")
-    public ResponseEntity<EcoleDTO> updateEtudiantWithImage(
-            @PathVariable("idEtu") Long idEcole,
+    public ResponseEntity<EcoleDTO> updateEcoleWithImage(
+            @PathVariable("idEcole") Long idEcole,
             @RequestParam("logo") MultipartFile logo){
         try {
 

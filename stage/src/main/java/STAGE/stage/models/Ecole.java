@@ -22,6 +22,7 @@ public class Ecole {
     private String nomEcole;
     private String villeEcole;
     private String adresseEcole;
+    @Lob
     private byte[] logo;
     private String description;
     private String telephoneFix;
