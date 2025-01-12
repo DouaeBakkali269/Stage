@@ -5,13 +5,18 @@ import STAGE.stage.models.Stage;
 import STAGE.stage.repositories.EtudiantRepository;
 import STAGE.stage.repositories.FiliereRepository;
 import STAGE.stage.repositories.StageRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface StageService {
 
     StageDTO createStage(StageDTO stageDTO);
     StageDTO updateStage(Long id, StageDTO stageDTO);
+
+    //convention de stage
     StageDTO getStageById(Long id);
     List<StageDTO> getStagesByEntrepriseId(Long entrepriseId); // Fetch stages by entreprise ID
     List<StageDTO> getStagesByStatus(String status); // Fetch stages by status
@@ -31,4 +36,16 @@ public interface StageService {
 
     //get stage by ecoleId
     List<StageDTO> findStagesByEcoleId(Long ecoleId);
+
+    //convention de stage
+    Stage getStageEntityById(Long id);
+
+    //Convention de Stage
+    void uploadConventionDeStage(Long stageId, MultipartFile file);
+    Resource downloadConventionDeStage(Long stageId);
+
+    //Attestation de stage
+    void uploadAttestationDeStage(Long id, MultipartFile file) throws IOException;
+
+    Resource downloadAttestationDeStage(Long id);
 }

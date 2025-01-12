@@ -6,8 +6,12 @@ import STAGE.stage.models.*;
 import STAGE.stage.repositories.*;
 import STAGE.stage.services.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -199,7 +203,9 @@ public class StageServiceImpl implements StageService {
                             stage.getStatut(), stage.getType(),
                             stage.getEtudiant().getIdEtu(),
                             stage.getOffre() != null ? stage.getOffre().getIdOffre() : null,
-                            stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null))
+                            stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null,
+                            stage.getConventionDeStage(),
+                            stage.getAttestationDeStage()))
                     .toList();
         }
 
@@ -211,13 +217,21 @@ public class StageServiceImpl implements StageService {
         // Map list of Stage entities to StageDTO
         return stages.stream()
                 .map(stage -> new StageDTO(
-                        stage.getIdStage(), stage.getTitre(), stage.getDescription(),
-                        stage.getDateDebut(), stage.getDateFin(), stage.getDuree(),
-                        stage.getLocalisation(), stage.getMontantRemuneration(),
-                        stage.getStatut(), stage.getType(),
+                        stage.getIdStage(),
+                        stage.getTitre(),
+                        stage.getDescription(),
+                        stage.getDateDebut(),
+                        stage.getDateFin(),
+                        stage.getDuree(),
+                        stage.getLocalisation(),
+                        stage.getMontantRemuneration(),
+                        stage.getStatut(),
+                        stage.getType(),
                         stage.getEtudiant().getIdEtu(),
                         stage.getOffre() != null ? stage.getOffre().getIdOffre() : null,
-                        stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null))
+                        stage.getEncadrant() != null ? stage.getEncadrant().getIdEncadrant() : null,
+                        stage.getConventionDeStage(),
+                        stage.getAttestationDeStage()))
                 .toList();
     }
 
@@ -256,5 +270,47 @@ public class StageServiceImpl implements StageService {
         return stages.stream()
                 .map(mapper::toDto) // Convert entities to DTOs using EntityMapper
                 .collect(Collectors.toList());
+    }
+
+    //convention de stage
+    @Override
+    public Stage getStageEntityById(Long id) {
+        return stageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Stage introuvable"));
+    }
+
+    @Override
+    public void uploadConventionDeStage(Long stageId, MultipartFile file) {
+        Stage stage = getStageEntityById(stageId);
+        try {
+            stage.setConventionDeStage(file.getBytes());
+            stageRepository.save(stage);
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de la lecture du fichier", e);
+        }
+    }
+
+    @Override
+    public Resource downloadConventionDeStage(Long stageId) {
+        Stage stage = getStageEntityById(stageId);
+        return new ByteArrayResource(stage.getConventionDeStage());
+    }
+
+    //Attestation de stage
+    @Override
+    public void uploadAttestationDeStage(Long id, MultipartFile file) throws IOException {
+        Stage stage = stageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Stage not found"));
+
+        stage.setAttestationDeStage(file.getBytes());
+        stageRepository.save(stage);
+    }
+
+    @Override
+    public Resource downloadAttestationDeStage(Long id) {
+        Stage stage = stageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Stage not found"));
+
+        return new ByteArrayResource(stage.getAttestationDeStage());
     }
 }

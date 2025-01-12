@@ -25,4 +25,6 @@ public class StageDTO {
     private Long etudiantId;
     private Long offreId;
     private Long encadrantId;
+    private byte[] conventionDeStage;
+    private byte[] attestationDeStage;
 }

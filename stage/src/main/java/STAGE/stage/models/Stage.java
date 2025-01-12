@@ -27,6 +27,10 @@ public class Stage {
     private Float montantRemuneration;
     private String statut;
     private String type;
+    @Lob
+    private byte[] conventionDeStage;
+    @Lob
+    private byte[] attestationDeStage;
 
 
     @ManyToOne
