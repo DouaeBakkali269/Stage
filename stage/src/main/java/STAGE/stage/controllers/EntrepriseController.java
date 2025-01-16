@@ -62,7 +62,7 @@ public class EntrepriseController {
 
         byte[] logoData = entreprise.getLogo();
         if (logoData == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
         ByteArrayResource resource = new ByteArrayResource(logoData);
 

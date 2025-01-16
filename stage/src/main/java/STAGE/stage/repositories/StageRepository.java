@@ -37,6 +37,7 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
             "(SELECT e.idEtu FROM Etudiant e WHERE e.ecole.idEcole = :ecoleId)")
     List<Stage> findAValiderStagesByEcoleId(@Param("ecoleId") Long ecoleId);
 
+    @Query("SELECT s FROM Stage s WHERE s.etudiant.idEtu = :etudiantId")
     List<Stage> findByEtudiantIdEtu(Long etudiantId);
 
 

@@ -32,6 +32,10 @@ public interface StageService {
 
     void setStatusAndDeleteRest(Long etudiantId, Long stageId);
 
+    void setStatus(Long etudiantId, Long stageId);
+
+    void setStatuscf(Long etudiantId, Long stageId);
+
     List<StageDTO> getStagesByEtudiantId(Long etudiantId);
 
     //get stage by ecoleId

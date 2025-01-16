@@ -30,6 +30,7 @@ public class Stage {
     @Lob
     private byte[] conventionDeStage;
     @Lob
+    @Basic(fetch = FetchType.EAGER)
     private byte[] attestationDeStage;
 
 

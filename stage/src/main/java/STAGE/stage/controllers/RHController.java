@@ -1,5 +1,6 @@
 package STAGE.stage.controllers;
 
+import STAGE.stage.mappers.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import java.util.List;
 public class RHController {
     @Autowired
     private RHService rhService;
+    @Autowired
+    private EntityMapper entityMapper;
 
     @PostMapping
     public RHDTO createRH(@RequestBody RHDTO rhDTO) {
@@ -45,8 +48,9 @@ public class RHController {
         rhService.deleteRH(id);
     }
     @GetMapping("/entreprise/{entrepriseId}")
-    public List<RH> getRHByEntreprise(@PathVariable Long entrepriseId) {
-        return rhService.getRHByEntreprise(entrepriseId);
+    public List<RHDTO> getRHByEntreprise(@PathVariable Long entrepriseId) {
+        List<RH> rhs = rhService.getRHByEntreprise(entrepriseId);
+        return rhs.stream().map(entityMapper::toDto).toList();
     }
 
     @GetMapping("/user/{userId}")

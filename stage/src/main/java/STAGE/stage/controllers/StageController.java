@@ -80,7 +80,17 @@ public class StageController {
     @PutMapping("/set-status-delete-others/{etudiantId}/{stageId}")
     public ResponseEntity<String> setStatusAndDeleteRest(@PathVariable Long etudiantId, @PathVariable Long stageId) {
         stageService.setStatusAndDeleteRest(etudiantId, stageId);
-        return ResponseEntity.ok("Stage status updated and unrelated stages deleted.");
+        return ResponseEntity.ok("Stage status updated .");
+    }
+    @PutMapping("/set-status/{etudiantId}/{stageId}")
+    public ResponseEntity<String> setStatutConfirmation(@PathVariable Long etudiantId, @PathVariable Long stageId) {
+        stageService.setStatus(etudiantId, stageId);
+        return ResponseEntity.ok("Stage status updated .");
+    }
+    @PutMapping("/set-status-cf/{etudiantId}/{stageId}")
+    public ResponseEntity<String> setStatutRefus(@PathVariable Long etudiantId, @PathVariable Long stageId) {
+        stageService.setStatuscf(etudiantId, stageId);
+        return ResponseEntity.ok("Stage status updated .");
     }
 
     @GetMapping("/by-etudiant/{etudiantId}")

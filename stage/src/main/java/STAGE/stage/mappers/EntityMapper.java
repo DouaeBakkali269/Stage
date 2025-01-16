@@ -47,6 +47,7 @@ public interface EntityMapper {
     @Mapping(source = "etudiant.idEtu", target = "etudiantId")
     @Mapping(source = "offre.idOffre", target = "offreId")
     @Mapping(source = "encadrant.idEncadrant", target = "encadrantId")
+    @Mapping(source ="attestationDeStage", target = "attestationDeStage")
     StageDTO toDto(Stage stage);
     @Mapping(source = "etudiantId", target = "etudiant.idEtu")
     @Mapping(source = "offreId", target = "offre.idOffre")

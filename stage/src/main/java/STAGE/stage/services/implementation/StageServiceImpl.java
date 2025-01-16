@@ -1,6 +1,7 @@
 package STAGE.stage.services.implementation;
 
 import STAGE.stage.dtos.StageDTO;
+import STAGE.stage.exception.NoContentException;
 import STAGE.stage.mappers.EntityMapper;
 import STAGE.stage.models.*;
 import STAGE.stage.repositories.*;
@@ -48,6 +49,8 @@ public class StageServiceImpl implements StageService {
         stage.setMontantRemuneration(stageDTO.getMontantRemuneration());
         stage.setStatut(stageDTO.getStatut()); // status at the begining is "nouveau"
         stage.setType(stageDTO.getType());
+        stage.setConventionDeStage(stageDTO.getConventionDeStage());
+        stage.setAttestationDeStage(stageDTO.getAttestationDeStage());
 
         Offre offre = offreRepository.findById(stageDTO.getOffreId())
                 .orElseThrow(() -> new RuntimeException("Offre introuvable"));
@@ -79,6 +82,8 @@ public class StageServiceImpl implements StageService {
         stage.setMontantRemuneration(stageDTO.getMontantRemuneration());
         stage.setStatut(stageDTO.getStatut());
         stage.setType(stageDTO.getType());
+        stage.setConventionDeStage(stageDTO.getConventionDeStage());
+        stage.setAttestationDeStage(stageDTO.getAttestationDeStage());
 
         Offre offre = offreRepository.findById(stageDTO.getOffreId())
                 .orElseThrow(() -> new RuntimeException("Offre introuvable"));
@@ -157,6 +162,8 @@ public class StageServiceImpl implements StageService {
         dto.setOffreId(stage.getOffre().getIdOffre());
         dto.setEtudiantId(stage.getEtudiant().getIdEtu());
         dto.setEncadrantId(stage.getEncadrant().getIdEncadrant());
+        dto.setConventionDeStage(stage.getConventionDeStage());
+        dto.setAttestationDeStage(stage.getAttestationDeStage());
         return dto;
     }
 
@@ -241,6 +248,7 @@ public class StageServiceImpl implements StageService {
             // Step 1: Get all stages associated with the student
             List<Stage> stages = stageRepository.findByEtudiantIdEtu(etudiantId);
 
+
             // Step 2: Find the stage with the given stageId and update its status
             stages.stream()
                     .filter(stage -> stage.getIdStage().equals(stageId))
@@ -250,12 +258,70 @@ public class StageServiceImpl implements StageService {
                         stageRepository.save(stage); // Save the status update
                     });
 
-            // Step 3: Delete all other stages for the same student
-            stages.stream()
-                    .filter(stage -> !stage.getIdStage().equals(stageId))
-                    .forEach(stageRepository::delete);
 
+            // Step 3: Change the status of all other stages for the same student to "Refusé temporairement"
+            stages.stream()
+                    .filter(stage -> !stage.getIdStage().equals(stageId)) // Exclude the stage with the given ID
+                    .filter(stage -> !List.of("en cours", "terminé", "évalué", "refusé", "refusé temporairement", "valide")
+                            .contains(stage.getStatut())) // Exclude stages with specific statuses
+                    .forEach(stage -> {
+                        stage.setStatut("refusé temporairement");
+                        stageRepository.save(stage); // Persist the status update
+                    });
+        }
+    @Override
+    public void setStatus(Long etudiantId, Long stageId) {
+        // Step 1: Get all stages associated with the student
+        List<Stage> stages = stageRepository.findByEtudiantIdEtu(etudiantId);
+
+
+        // Step 2: Find the stage with the given stageId and update its status
+        stages.stream()
+                .filter(stage -> stage.getIdStage().equals(stageId))
+                .findFirst()
+                .ifPresent(stage -> {
+                    stage.setStatut("valide");
+                    stageRepository.save(stage); // Save the status update
+                });
+
+
+        stages.stream()
+                .filter(stage -> !stage.getIdStage().equals(stageId)) // Exclude the stage with the given ID
+                .forEach(stage -> {
+                    // Check current status and update only if it is "refusé temporairement" or "valide"
+                    if ("refusé temporairement".equals(stage.getStatut()) || "valide".equals(stage.getStatut())) {
+                        stage.setStatut("refusé");
+                        stageRepository.save(stage); // Persist the status update
+                    }
+                });
     }
+    @Override
+    public void setStatuscf(Long etudiantId, Long stageId) {
+        // Step 1: Get all stages associated with the student
+        List<Stage> stages = stageRepository.findByEtudiantIdEtu(etudiantId);
+
+
+        // Step 2: Find the stage with the given stageId and update its status
+        stages.stream()
+                .filter(stage -> stage.getIdStage().equals(stageId))
+                .findFirst()
+                .ifPresent(stage -> {
+                    stage.setStatut("refusé");
+                    stageRepository.save(stage); // Save the status update
+                });
+
+
+        stages.stream()
+                .filter(stage -> !stage.getIdStage().equals(stageId))
+                .forEach(stage -> {
+                    // Check current status and update only if it is NOT "refusé temporairement"
+                    if ("refusé temporairement".equals(stage.getStatut())) {
+                        stage.setStatut("nouveau");
+                        stageRepository.save(stage); // Persist the status update
+                    }
+                });
+    }
+
     @Override
     public List<StageDTO> getStagesByEtudiantId(Long etudiantId) {
         // Fetch stages by Etudiant ID
@@ -293,6 +359,9 @@ public class StageServiceImpl implements StageService {
     @Override
     public Resource downloadConventionDeStage(Long stageId) {
         Stage stage = getStageEntityById(stageId);
+        if (stage.getConventionDeStage() == null) {
+            throw new NoContentException("No convention available for the specified stage.");
+        }
         return new ByteArrayResource(stage.getConventionDeStage());
     }
 
@@ -310,6 +379,10 @@ public class StageServiceImpl implements StageService {
     public Resource downloadAttestationDeStage(Long id) {
         Stage stage = stageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Stage not found"));
+        if (stage.getAttestationDeStage() == null) {
+            // Return a custom exception signaling no content
+            throw new NoContentException("No attestation available for the specified stage.");
+        }
 
         return new ByteArrayResource(stage.getAttestationDeStage());
     }
